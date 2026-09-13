@@ -1,0 +1,5 @@
+# Railpack static-site config — serve the repo root (index.html lives here).
+# Without this, Railpack would prefer public/ as the web root and the site would 404.
+root: .
+# fall back to index.html for unmatched routes (hash links, deep paths)
+index_fallback: true

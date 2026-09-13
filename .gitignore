@@ -1,0 +1,9 @@
+# local tooling — not part of the deployed site
+.freebuff/
+_source/
+desktop-harness.html
+server.log
+
+# OS / editor noise
+Thumbs.db
+.DS_Store

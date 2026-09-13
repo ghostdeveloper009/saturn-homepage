@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saturn — Multi-Chain Telegram Trading Bot &amp; Dashboard</title>
+<meta name="description" content="Snipe liquidity adds, copy wallets and track live PnL. MEV-protected Solana and Ethereum execution in Telegram, with a full web trading dashboard.">
+<meta name="author" content="Saturn">
+<meta name="theme-color" content="#050609">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Saturn">
+<meta property="og:title" content="Saturn — Multi-Chain Telegram Trading Bot &amp; Dashboard">
+<meta property="og:description" content="Snipe liquidity adds, copy wallets and track live PnL. MEV-protected Solana and Ethereum execution in Telegram, with a full web trading dashboard.">
+<meta property="og:url" content="https://saturnbots.org/">
+<meta property="og:image" content="https://saturnbots.org/images/saturn-og.png">
+<meta property="og:image:secure_url" content="https://saturnbots.org/images/saturn-og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Saturn Bots — Multi-Chain Telegram Trading">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Saturn — Multi-Chain Telegram Trading Bot">
+<meta name="twitter:description" content="Snipe liquidity adds, copy wallets and track live PnL. MEV-protected execution in Telegram, with a full web trading dashboard.">
+<meta name="twitter:image" content="https://saturnbots.org/images/saturn-og.png">
+<meta name="twitter:image:alt" content="Saturn Bots — Multi-Chain Telegram Trading">
+
+<link rel="canonical" href="https://saturnbots.org/">
+<link rel="icon" href="public/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="public/favicon.ico">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"Saturn","url":"https://saturnbots.org/","description":"Multi-Chain Telegram Trading Bot & Dashboard"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Do I need to sign up or complete KYC?","acceptedAnswer":{"@type":"Answer","text":"No KYC, ever. The Telegram bot needs zero sign-up — open @Saturnsolbot (Solana), @Saturnethbot (Ethereum and EVM) or the BSC bot and your account is created on the first message. The web dashboard offers optional account creation via Telegram Connect, email, magic link, or link code — but it's not required to start trading. Both paths are non-custodial."}},
+{"@type":"Question","name":"How many wallets can I run?","acceptedAnswer":{"@type":"Answer","text":"Up to 10 per chain. Generate them in-bot or import via private key, then select one, several or all of them for parallel execution on a single trade."}},
+{"@type":"Question","name":"Is there a web dashboard?","acceptedAnswer":{"@type":"Answer","text":"Yes — app.saturnbots.org runs the same account, wallets and positions engine as the bots, with Trade Monitor, Positions and Wallets on a full screen."}},
+{"@type":"Question","name":"How does Auto Snipe fire?","acceptedAnswer":{"@type":"Answer","text":"Queue a contract address or a deployer wallet. It fires at liquidity-add, in one of three modes: Method ID (on addLiquidity), liquidity threshold, or wallet copy."}},
+{"@type":"Question","name":"What triggers can Limit Orders use?","acceptedAnswer":{"@type":"Answer","text":"Exact price, market-cap crossing, multiplier (2x / 5x / 10x), or trailing stop."}},
+{"@type":"Question","name":"How does Copy Trade work?","acceptedAnswer":{"@type":"Answer","text":"Mirror any wallet you track. Set a fixed size or a percentage of the leader's trade, and route the copy through your selected wallets."}},
+{"@type":"Question","name":"Which chains work today?","acceptedAnswer":{"@type":"Answer","text":"Solana is in production across Raydium, Pump.fun, Meteora and Orca. Ethereum is in production across the EVM networks — Base, Arbitrum, Optimism and Polygon. BSC is live across PancakeSwap and the top BNB Chain DEXes. Tron is live across SunSwap. Other chains are coming soon."}},
+{"@type":"Question","name":"What stops me getting sandwiched?","acceptedAnswer":{"@type":"Answer","text":"MEV protection routes orders through private bundles — Jito on Solana, Flashbots on EVM. Toggle it per chain in Global Settings."}},
+{"@type":"Question","name":"Does Saturn hold my funds?","acceptedAnswer":{"@type":"Answer","text":"No. Saturn is non-custodial — wallets belong to you, keys stay with your account, and nothing is pooled or held by the platform."}},
+{"@type":"Question","name":"What does the referral program pay?","acceptedAnswer":{"@type":"Answer","text":"Five tiers, based on referral count: Bronze 0.5%, Silver 0.75% at 5 refs, Gold 1.0% at 15, Platinum 1.5% at 30 and Diamond 2.0% at 50+. Payouts are automatic and on-chain."}},
+{"@type":"Question","name":"Where is the full documentation?","acceptedAnswer":{"@type":"Answer","text":"docs.saturnbots.org covers setup guides, command references, API docs and troubleshooting for every Saturn bot."}}
+]}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DYLL8F3497"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DYLL8F3497');</script>
+
+<style>
+:root{
+  --bg:#050609;
+  --bg2:#0a0d16;
+  --panel:rgba(255,255,255,.035);
+  --panel2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.09);
+  --line2:rgba(255,255,255,.16);
+  --text:#f4f5f7;
+  --muted:#9aa3b8;
+  --dim:#6b7387;
+  --gold:#f4b942;
+  --gold2:#c98f1e;
+  --ice:#7dd3fc;
+  --green:#4ade80;
+  --red:#f87171;
+  --grad-gold:linear-gradient(100deg,#ffe9b0 0%,#f4b942 45%,#d28f1c 100%);
+  --mono:'Geist Mono',ui-monospace,SFMono-Regular,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip}
+body{overflow-x:hidden;overflow-x:clip;
+  background:var(--bg);color:var(--text);
+  font-family:'Geist',system-ui,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(244,185,66,.35);color:#fff}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.skip{position:absolute;left:-999px;top:8px;z-index:99;background:var(--gold);color:#1a1205;padding:10px 18px;border-radius:8px;font-weight:700}
+.skip:focus{left:8px}
+
+/* ---------- atmosphere ---------- */
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+#nebula{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgba(244,185,66,.07), transparent 60%),
+    radial-gradient(50rem 36rem at -15% 30%, rgba(93,143,255,.08), transparent 60%),
+    radial-gradient(46rem 32rem at 60% 110%, rgba(244,185,66,.05), transparent 60%);
+}
+.grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 20%,#000 30%,transparent 75%);
+          mask-image:radial-gradient(ellipse 80% 60% at 50% 20%,#000 30%,transparent 75%);
+}
+main{position:relative;z-index:1}
+
+/* ---------- nav ---------- */
+nav.topnav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .35s,border-color .35s,backdrop-filter .35s;border-bottom:1px solid transparent}
+nav.topnav.scrolled{background:rgba(5,6,9,.78);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.2em;text-transform:uppercase}
+.brand .dot{width:24px;height:24px;border-radius:50%;background:var(--grad-gold);position:relative;box-shadow:0 0 16px rgba(244,185,66,.55);flex:none}
+.brand .dot::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:5px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85);transform:translateY(-50%) rotate(-18deg)}
+.navlinks{display:flex;gap:2px;font-size:13.5px;color:var(--muted)}
+.navlinks>a,.navlinks .dd>button{display:flex;align-items:center;gap:5px;padding:9px 12px;border-radius:9px;color:var(--muted);background:none;border:none;font-size:13.5px;transition:color .2s,background .2s}
+.navlinks>a:hover,.navlinks .dd>button:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.navlinks .dd{position:relative}
+.navlinks .dd .chev{font-size:10px;transition:transform .2s}
+.navlinks .dd:hover .chev,.navlinks .dd:focus-within .chev{transform:rotate(180deg)}
+.dd-menu{position:absolute;right:0;top:100%;padding-top:8px;width:200px;opacity:0;visibility:hidden;transform:translateY(6px);transition:all .22s}
+.navlinks .dd:hover .dd-menu,.navlinks .dd:focus-within .dd-menu{opacity:1;visibility:visible;transform:none}
+.dd-menu>div{background:rgba(8,10,18,.96);border:1px solid var(--line);border-radius:14px;padding:6px;backdrop-filter:blur(16px);box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.dd-menu a{display:block;padding:9px 12px;border-radius:9px;font-size:13px;color:var(--muted)}
+.dd-menu a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-cta{display:flex;gap:9px;align-items:center}
+.lang{position:relative}
+.lang>button{display:flex;align-items:center;gap:6px;height:38px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-size:12.5px;font-weight:600;transition:border-color .2s,color .2s}
+.lang>button:hover{border-color:rgba(244,185,66,.5);color:var(--gold)}
+.lang-menu{position:absolute;right:0;top:calc(100% + 8px);width:180px;background:rgba(8,10,18,.97);border:1px solid var(--line);border-radius:14px;padding:6px;backdrop-filter:blur(16px);box-shadow:0 24px 60px rgba(0,0,0,.6);display:none;z-index:60}
+.lang.open .lang-menu{display:block}
+.lang-menu button{display:flex;width:100%;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:9px;background:none;border:none;color:var(--muted);font-size:13px;text-align:left}
+.lang-menu button:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.lang-menu button.on{color:var(--gold);background:rgba(244,185,66,.1)}
+.burger{display:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);font-size:17px}
+.mobile-menu{position:fixed;inset:64px 0 0 0;z-index:49;background:rgba(5,6,9,.97);backdrop-filter:blur(18px);overflow-y:auto;padding:18px 22px 40px;display:none}
+.mobile-menu.open{display:block}
+.mobile-menu a.mlink{display:flex;align-items:center;min-height:50px;border-bottom:1px solid rgba(255,255,255,.07);font-size:15px;font-weight:500;color:var(--text)}
+.mobile-menu a.msub{display:flex;align-items:center;min-height:42px;padding-left:14px;font-size:12.5px;color:var(--dim)}
+.mobile-menu .mctas{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+@media(max-width:1080px){.navlinks{display:none}.nav-cta .btn-ghost{display:none}.burger{display:grid;place-items:center}.lang.desktop-only{display:none}}
+@media(max-width:520px){.lang.mobile-compact span.lbl{display:none}.lang.mobile-compact>button{padding:0;width:38px;justify-content:center}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;transition:transform .25s,box-shadow .25s,background .25s,border-color .25s,color .25s;white-space:nowrap;border:none}
+.btn-gold{background:linear-gradient(to bottom,#ffd97a,#eaa023);color:#1a1205;padding:12px 24px;box-shadow:0 8px 26px rgba(234,160,35,.38)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(234,160,35,.55)}
+.btn-ghost{border:1px solid var(--line2);color:var(--text);padding:12px 24px;background:rgba(255,255,255,.04)}
+.btn-ghost:hover{border-color:rgba(244,185,66,.55);color:var(--gold);transform:translateY(-2px)}
+.btn-sm{padding:9px 18px;font-size:13px}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:130px 24px 70px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;max-width:92vw;border:1px solid rgba(244,185,66,.35);background:rgba(244,185,66,.08);color:var(--gold);font-size:11.5px;font-weight:600;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;border-radius:999px;margin-bottom:28px}
+.eyebrow span.txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none;box-shadow:0 0 0 0 rgba(244,185,66,.7);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,185,66,.6)}70%{box-shadow:0 0 0 12px rgba(244,185,66,0)}100%{box-shadow:0 0 0 0 rgba(244,185,66,0)}}
+h1.mega{font-size:clamp(40px,6.6vw,84px);line-height:1.04;font-weight:700;letter-spacing:-.03em;max-width:1000px;text-wrap:balance}
+.grad,.grad *{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1.mega .grad{display:block}
+.hero-sub{margin:26px auto 0;max-width:640px;color:var(--muted);font-size:clamp(15px,1.7vw,17.5px)}
+.hero-ctas{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;justify-content:center}
+.hero-sub2{margin-top:22px;color:var(--dim);font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px;width:min(860px,100%)}
+@media(max-width:680px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+.hstat{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:16px;padding:16px 14px;backdrop-filter:blur(6px);transition:border-color .25s,background .25s}
+.hstat:hover{border-color:rgba(244,185,66,.4);background:rgba(255,255,255,.05)}
+.hstat b{display:block;font-family:var(--mono);font-size:clamp(20px,2.4vw,28px);font-weight:600;color:var(--gold)}
+.hstat span{color:var(--muted);font-size:11.5px;margin-top:3px;display:block}
+.scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:var(--dim);font-size:10px;letter-spacing:.3em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-hint .line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:drip 2s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- saturn planet ---------- */
+.saturn-stage{position:absolute;top:6%;right:-16%;width:min(56vw,760px);aspect-ratio:1;pointer-events:none;opacity:.55;z-index:-1;
+  -webkit-mask-image:linear-gradient(to right,transparent 2%,#000 55%);mask-image:linear-gradient(to right,transparent 2%,#000 55%)}
+@media(max-width:900px){.saturn-stage{top:8%;right:-40%;opacity:.5;-webkit-mask-image:none;mask-image:none}}
+.saturn-spin{position:absolute;inset:0;animation:spin 90s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.saturn-tilt{position:absolute;inset:12%;transform:rotate(-18deg)}
+.saturn-body{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #ffe9b8 0%, #f4b942 30%, #b47714 62%, #4d3007 100%);
+  box-shadow:0 0 120px rgba(244,185,66,.35), inset -30px -30px 90px rgba(0,0,0,.55)}
+.ring{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%) rotateX(76deg);border-style:solid;border-color:transparent}
+.ring-a{width:150%;height:150%;border-width:2px;
+  border-top-color:rgba(255,236,190,.85);border-bottom-color:rgba(255,236,190,.28);border-left-color:rgba(255,236,190,.45);border-right-color:rgba(255,236,190,.45);
+  filter:drop-shadow(0 0 12px rgba(244,185,66,.35))}
+.ring-b{width:172%;height:172%;border-width:9px;
+  border-top-color:rgba(244,185,66,.28);border-bottom-color:rgba(244,185,66,.5);border-left-color:rgba(244,185,66,.14);border-right-color:rgba(244,185,66,.14)}
+.ring-c{width:196%;height:196%;border-width:1.5px;
+  border-top-color:rgba(255,255,255,.4);border-bottom-color:rgba(255,255,255,.14);border-left-color:rgba(255,255,255,.22);border-right-color:rgba(255,255,255,.22)}
+
+/* ---------- tickers ---------- */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);overflow:hidden;padding:13px 0;position:relative;z-index:1;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent)}
+.ticker-track{display:flex;gap:52px;width:max-content;animation:marquee 36s linear infinite;font-family:var(--mono);font-size:13px;color:var(--muted);align-items:center}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes marquee-rev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.tk{display:flex;gap:9px;align-items:center;white-space:nowrap}
+.tk .sym{color:var(--gold);font-size:15px}
+.tk .nm{color:var(--muted)}
+.tk .sep{color:rgba(255,255,255,.14);margin-left:20px}
+.cmds{overflow:hidden;padding:14px 0;margin-top:4px;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(to right,transparent,#000 10%,#000 90%,transparent)}
+.cmds-track{display:flex;gap:11px;width:max-content;animation:marquee-rev 44s linear infinite}
+.cmds:hover .cmds-track{animation-play-state:paused}
+.chip{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);border-radius:999px;padding:7px 15px;font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+
+/* ---------- layout ---------- */
+section{padding:105px 24px;position:relative}
+.wrap{max-width:1400px;margin:0 auto}
+.kicker{color:var(--gold);font-size:12px;font-weight:600;font-family:var(--mono);letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.kicker::before{content:"";width:34px;height:1px;background:var(--gold);flex:none}
+h2.title{font-size:clamp(30px,4.4vw,52px);line-height:1.08;font-weight:700;letter-spacing:-.02em;max-width:860px}
+.lede{color:var(--muted);max-width:660px;margin-top:18px;font-size:16px}
+
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}.d4{transition-delay:.28s}.d5{transition-delay:.35s}.d6{transition-delay:.42s}
+
+.panel{border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 30px 80px -40px rgba(0,0,0,.9)}
+
+/* ---------- trust strip ---------- */
+.trust{padding-top:34px}
+.trust-panel{padding:22px;overflow:hidden}
+.trust-grid{display:grid;gap:11px;grid-template-columns:repeat(5,1fr)}
+@media(max-width:1000px){.trust-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.trust-grid{grid-template-columns:repeat(2,1fr)}}
+.tmet{display:flex;gap:12px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:14px 16px;transition:border-color .25s}
+.tmet:hover{border-color:rgba(244,185,66,.4)}
+.tmet .ic{width:36px;height:36px;flex:none;border-radius:50%;border:1px solid rgba(244,185,66,.25);background:rgba(244,185,66,.1);display:grid;place-items:center;color:var(--gold);font-size:15px}
+.tmet b{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--gold);display:block;line-height:1.1;white-space:nowrap}
+.tmet span{color:var(--muted);font-size:11.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trust-roll{display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+.trust-roll .vbadge{flex:none;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.1);color:var(--green);border-radius:999px;padding:3px 11px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+.roll-box{position:relative;height:22px;flex:1;overflow:hidden}
+.roll-box p{position:absolute;inset:0;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .5s;opacity:0}
+.roll-box p.on{opacity:1;transform:none}
+.roll-box p.up{transform:translateY(-100%)}
+.roll-box p.down{transform:translateY(100%)}
+
+/* ---------- features ---------- */
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin-top:52px}
+.engine{position:relative;border:1px solid var(--line);border-radius:18px;padding:24px;background:var(--panel);overflow:hidden;transition:transform .3s,border-color .3s,background .3s;min-height:185px;display:flex;flex-direction:column}
+.engine::before{content:"";position:absolute;inset:0;background:radial-gradient(320px 200px at var(--mx,50%) var(--my,0%),rgba(244,185,66,.13),transparent 70%);opacity:0;transition:opacity .35s;pointer-events:none}
+.engine:hover{transform:translateY(-5px);border-color:rgba(244,185,66,.45);background:var(--panel2)}
+.engine:hover::before{opacity:1}
+.engine .tag{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:10.5px;color:var(--dim);border:1px solid var(--line);background:rgba(255,255,255,.03);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.engine .ic{width:40px;height:40px;border-radius:12px;border:1px solid rgba(244,185,66,.25);background:rgba(244,185,66,.1);display:grid;place-items:center;font-size:18px;margin-bottom:14px}
+.engine h3{font-size:16px;font-weight:600;margin-bottom:8px;padding-right:70px}
+.engine p{color:var(--muted);font-size:13.5px}
+
+/* ---------- bots ---------- */
+.bots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px}
+@media(max-width:1060px){.bots-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.bots-grid{grid-template-columns:1fr}}
+.bot{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--panel);transition:transform .3s,border-color .3s;display:flex;flex-direction:column}
+.bot:hover{transform:translateY(-4px);border-color:var(--line2)}
+.bot.live{background:linear-gradient(160deg,rgba(244,185,66,.10),rgba(244,185,66,.02));border-color:rgba(244,185,66,.4)}
+.bot .badge{display:inline-flex;align-self:flex-start;align-items:center;gap:7px;font-size:10px;font-weight:600;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:14px}
+.bot.live .badge{background:rgba(74,222,128,.12);color:var(--green);border:1px solid rgba(74,222,128,.35)}
+.bot.soon .badge{background:rgba(255,255,255,.05);color:var(--dim);border:1px solid var(--line)}
+.bot h3{font-size:15.5px;font-weight:600;margin-bottom:8px}
+.bot p{color:var(--muted);font-size:13px;margin-bottom:16px;flex:1}
+.bot .go{font-family:var(--mono);font-size:12px;color:var(--gold)}
+.bot .go:hover{text-decoration:underline}
+.bot.soon h3,.bot.soon p{opacity:.55}
+
+/* ---------- chains ---------- */
+.chain-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
+@media(max-width:1000px){.chain-cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.chain-cards{grid-template-columns:1fr}}
+.ccard{position:relative;border:1px solid var(--line);border-radius:18px;padding:26px;background:var(--panel);overflow:hidden}
+.ccard::before{content:"";position:absolute;top:-96px;right:-96px;width:256px;height:256px;border-radius:50%;background:rgba(244,185,66,.08);filter:blur(40px);pointer-events:none}
+.ccard h3{font-size:20px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ccard .live-badge{border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.1);color:var(--green);border-radius:999px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.ccard .blurb{color:var(--muted);font-size:13.5px;margin-top:10px}
+.dexes{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.dexes span{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:9px;padding:5px 12px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.ccard ul{margin-top:18px;list-style:none}
+.ccard li{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:13px;padding:6px 0}
+.ccard li::before{content:"✓";color:var(--green);font-size:12px;flex:none;margin-top:2px}
+.expanding{margin-top:16px;border:1px solid var(--line);border-radius:18px;padding:24px;background:var(--panel)}
+.expanding .ex-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.expanding h3{font-size:17px;font-weight:600}
+.expanding .roll-badge{border:1px solid rgba(244,185,66,.3);background:rgba(244,185,66,.08);color:var(--gold);border-radius:999px;padding:3px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.expanding p{color:var(--muted);font-size:13px;margin-top:8px}
+.ex-list{list-style:none;margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:700px){.ex-list{grid-template-columns:repeat(2,1fr)}}
+.ex-list li{display:flex;gap:9px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:10px;padding:10px 13px;opacity:.65;font-size:13px}
+.ex-list li::before{content:"◌";color:var(--dim)}
+
+/* ---------- results slider ---------- */
+.slider{margin-top:52px;position:relative}
+.slider-view{overflow:hidden;border-radius:20px}
+.slider-track{display:flex;transition:transform .7s cubic-bezier(.22,1,.36,1)}
+.slide{width:100%;flex:none;padding:2px}
+.slide-in{border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:clamp(24px,4vw,44px)}
+.slide .stag{display:inline-block;border:1px solid rgba(244,185,66,.3);background:rgba(244,185,66,.08);color:var(--gold);border-radius:999px;padding:5px 13px;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.slide .smetric{font-size:clamp(22px,3vw,32px);font-weight:600;margin-top:20px;letter-spacing:-.02em}
+.slide .sbody{color:var(--muted);margin-top:12px;max-width:660px;font-size:14.5px}
+.slide .sproof{border-top:1px solid var(--line);margin-top:22px;padding-top:14px;color:var(--dim);font-family:var(--mono);font-size:11.5px}
+.slider-ui{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:18px}
+.dots{display:flex;gap:8px}
+.dots button{height:6px;width:12px;border:none;border-radius:999px;background:rgba(255,255,255,.16);transition:all .3s;padding:0}
+.dots button.on{background:var(--gold);width:30px}
+.arrows{display:flex;gap:8px}
+.arrows button{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);font-size:16px;transition:all .2s}
+.arrows button:hover{border-color:rgba(244,185,66,.5);color:var(--gold)}
+
+/* ---------- dashboard sim ---------- */
+.dash-panel{margin-top:52px;overflow:hidden}
+.dtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);padding:8px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.dtabs::-webkit-scrollbar{display:none}
+.dtabs button{border:none;background:none;color:var(--muted);font-size:13px;font-weight:500;padding:9px 16px;border-radius:10px;white-space:nowrap;transition:all .2s}
+.dtabs button:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.dtabs button.on{background:rgba(244,185,66,.15);color:var(--gold)}
+.dbody{padding:22px}
+.dstats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.dstats{grid-template-columns:1fr}}
+.dcell{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:16px;padding:18px}
+.dcell.wide{grid-column:span 2}
+@media(max-width:720px){.dcell.wide{grid-column:auto}}
+.dcell .dl{color:var(--dim);font-size:10.5px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.dcell .dv{font-family:var(--mono);font-size:clamp(20px,2.4vw,28px);font-weight:600;margin-top:6px}
+.dcell .dp{font-family:var(--mono);font-size:13px;font-weight:600;margin-top:3px}
+.up{color:var(--green)}.down{color:var(--red)}
+.dfeed{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.dfeed .frow{display:flex;align-items:center;gap:10px;font-size:13px}
+.dfeed .side{font-family:var(--mono);font-size:11px;font-weight:700;width:38px}
+.dbars{display:flex;align-items:flex-end;gap:5px;height:100%;min-height:120px}
+.dbars i{flex:1;background:rgba(244,185,66,.55);border-radius:4px 4px 0 0;transition:height .5s;display:block}
+.mrow{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:11px;padding:11px 16px;margin-bottom:8px;font-size:13px}
+.mrow .mt{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.mrow .mdot{width:8px;height:8px;border-radius:50%;flex:none}
+.mrow .me{font-weight:500}
+.mrow .md{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--dim);text-align:right}
+.pcard{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:18px}
+.pcard h4{font-size:14px;font-weight:600}
+.pcard p{color:var(--muted);font-size:13px;margin-top:6px}
+.wrow{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:11px;padding:12px 16px;margin-bottom:8px;font-size:13px;flex-wrap:wrap}
+.wrow .wn{font-weight:600}
+.wrow .wa{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.wrow .wb{margin-left:auto;font-family:var(--mono);font-size:13px}
+.wrow .ws{border-radius:999px;padding:2px 10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+.ws.act{border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.1);color:var(--green)}
+.ws.ina{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--dim)}
+.dash-cta{display:flex;justify-content:center;margin-top:26px}
+
+/* ---------- ecosystem / phone ---------- */
+.dash{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center;margin-top:52px}
+@media(max-width:960px){.dash{grid-template-columns:1fr}}
+.phone{width:min(360px,88vw);margin:0 auto;border:1px solid var(--line2);border-radius:30px;background:linear-gradient(180deg,#101527,#0a0e1c);box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 8px rgba(255,255,255,.03);overflow:hidden;position:relative}
+.phone::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:22px;border-radius:12px;background:#050609;z-index:3}
+.ph-head{display:flex;align-items:center;gap:10px;padding:44px 16px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+.ph-head .ava{width:34px;height:34px;border-radius:50%;background:var(--grad-gold);display:grid;place-items:center;font-weight:700;color:#1a1205;font-size:15px}
+.ph-head b{font-size:14px}
+.ph-head span{display:block;font-size:11px;color:var(--green);font-family:var(--mono)}
+.ph-body{padding:14px;display:flex;flex-direction:column;gap:9px;min-height:430px;justify-content:flex-end}
+.msg{max-width:88%;padding:10px 13px;border-radius:14px;font-size:12.5px;line-height:1.55;opacity:0;transform:translateY(12px);animation:msgin .5s forwards}
+@keyframes msgin{to{opacity:1;transform:none}}
+.msg.bot{align-self:flex-start;background:rgba(255,255,255,.06);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.user{align-self:flex-end;background:rgba(244,185,66,.14);border:1px solid rgba(244,185,66,.35);border-bottom-right-radius:4px}
+.msg .mh{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;display:flex;justify-content:space-between;gap:14px}
+.msg .row{display:flex;justify-content:space-between;gap:16px;font-family:var(--mono);font-size:11.5px}
+.msg .row span:first-child{color:var(--dim)}
+.ok{color:var(--green)}.warn{color:var(--gold)}
+.ph-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.ph-input .fake{flex:1;border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:12px;color:var(--dim);font-family:var(--mono)}
+.ph-input .send{width:34px;height:34px;border-radius:50%;background:var(--grad-gold);display:grid;place-items:center;color:#1a1205;font-weight:700}
+.typing{display:inline-flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--dim);animation:blink 1.2s infinite;display:block}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+.surfaces{position:relative;margin-top:8px}
+.surfaces::before{content:"";position:absolute;left:29px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),rgba(244,185,66,.05))}
+.surface{position:relative;display:grid;grid-template-columns:60px 1fr;gap:22px;padding:24px 0;max-width:860px}
+.surface .node{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px;background:#0b1120;border:1px solid rgba(244,185,66,.5);color:var(--gold);box-shadow:0 0 24px rgba(244,185,66,.25);z-index:1}
+.surface h3{font-size:18px;margin-bottom:6px}
+.surface p{color:var(--muted);font-size:14px;max-width:620px}
+
+/* ---------- security ---------- */
+.sec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
+@media(max-width:960px){.sec-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.sec-grid{grid-template-columns:1fr}}
+.sec{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--panel)}
+.sec h3{font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+.sec h3::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--gold);box-shadow:0 0 10px rgba(244,185,66,.7);flex:none}
+.sec ul{list-style:none}
+.sec li{color:var(--muted);font-size:13px;padding:7px 0 7px 22px;position:relative;border-bottom:1px dashed rgba(255,255,255,.06)}
+.sec li:last-child{border-bottom:none}
+.sec li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-size:12px}
+.sec-note{margin-top:24px;color:var(--dim);font-size:13px}
+.sec-note a{color:var(--ice);border-bottom:1px dotted var(--ice)}
+
+/* ---------- referral ---------- */
+.tiers{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:52px}
+@media(max-width:1000px){.tiers{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.tiers{grid-template-columns:repeat(2,1fr)}}
+.tier{border:1px solid var(--line);border-radius:16px;padding:24px 16px;text-align:center;background:var(--panel);transition:transform .3s,border-color .3s}
+.tier:hover{transform:translateY(-5px);border-color:var(--line2)}
+.tier .gem{font-size:26px;margin-bottom:10px}
+.tier h3{font-size:14.5px;letter-spacing:.05em}
+.tier .refs{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin:7px 0 11px}
+.tier .bonus{font-family:var(--mono);font-weight:600;font-size:21px;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tier.diamond{border-color:rgba(125,211,252,.5);background:linear-gradient(160deg,rgba(125,211,252,.10),rgba(255,255,255,.02))}
+.tier.diamond .bonus{background:linear-gradient(135deg,#bae6fd,#7dd3fc,#38bdf8);-webkit-background-clip:text;background-clip:text}
+
+/* ---------- faq ---------- */
+.faq-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:52px}
+@media(max-width:860px){.faq-grid{grid-template-columns:1fr}}
+.faq-group{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:22px;scroll-margin-top:90px}
+.faq-group>h3{color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+details{border-bottom:1px solid rgba(255,255,255,.07)}
+details:last-child{border-bottom:none}
+summary{cursor:pointer;padding:15px 4px;font-weight:500;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:color .2s}
+summary:hover{color:var(--gold)}
+summary::-webkit-details-marker{display:none}
+summary .plus{font-family:var(--mono);color:var(--gold);transition:transform .3s;font-size:17px;flex:none}
+details[open] summary .plus{transform:rotate(45deg)}
+details .a{padding:0 4px 16px;color:var(--muted);font-size:13.5px}
+
+/* ---------- cta ---------- */
+.cta{text-align:center;padding:140px 24px 120px;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;inset:0;background:radial-gradient(50rem 26rem at 50% 115%,rgba(244,185,66,.16),transparent 65%)}
+.cta h2{font-size:clamp(32px,5.4vw,64px);font-weight:700;letter-spacing:-.02em}
+.cta .btns{display:flex;gap:14px;justify-content:center;margin-top:38px;flex-wrap:wrap}
+.counters{display:flex;gap:56px;justify-content:center;margin-top:56px;flex-wrap:wrap}
+.counter b{display:block;font-family:var(--mono);font-size:clamp(26px,4vw,38px);font-weight:600;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent}
+.counter span{color:var(--dim);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);position:relative;z-index:1;overflow:hidden}
+footer::before{content:"";position:absolute;inset:0;background:radial-gradient(60rem 30rem at 50% -20%,rgba(244,185,66,.07),transparent 60%);pointer-events:none}
+.f-inner{position:relative;max-width:1280px;margin:0 auto;padding:60px 24px 34px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px}
+@media(max-width:860px){.f-inner{grid-template-columns:1fr}}
+.f-tag{color:var(--muted);font-size:13.5px;max-width:300px;margin-top:16px}
+.f-ctas{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+footer h4{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+footer ul{list-style:none;margin-top:16px}
+footer li{margin-bottom:10px}
+footer li a{color:var(--muted);font-size:13.5px;transition:color .2s}
+footer li a:hover{color:var(--gold)}
+.f-bottom{position:relative;max-width:1280px;margin:0 auto;padding:22px 24px 30px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;color:var(--dim);font-size:12px}
+.f-bottom .disc{max-width:560px}
+
+/* ---------- misc ---------- */
+.flare{position:fixed;width:340px;height:340px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(244,185,66,.07),transparent 65%);transform:translate(-50%,-50%)}
+[dir="rtl"] .kicker{flex-direction:row-reverse}
+[dir="rtl"] .title,[dir="rtl"] .lede{text-align:right}
+[dir="rtl"] .surfaces::before{left:auto;right:29px}
+[dir="rtl"] .surface{grid-template-columns:1fr 60px}
+[dir="rtl"] .surface .node{order:2}
+[dir="rtl"] .sec li{padding:7px 22px 7px 0}
+[dir="rtl"] .sec li::before{left:auto;right:0}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+/* short laptop hero tightening */
+@media(min-width:901px) and (max-height:780px){
+  .hero{padding-top:96px;padding-bottom:50px}
+  h1.mega{font-size:clamp(40px,6vw,84px)}
+  .hero-sub{margin-top:16px;font-size:15.5px}
+  .hero-ctas{margin-top:24px}
+  .hero-stats{margin-top:26px}
+  .eyebrow{margin-bottom:20px}
+  .hero-sub2{margin-top:16px}
+}
+@media(max-height:700px){.scroll-hint{display:none}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#features">Skip to content</a>
+<canvas id="stars"></canvas>
+<div id="nebula"></div>
+<div class="grid-overlay"></div>
+<div class="flare" id="flare" aria-hidden="true"></div>
+
+<nav class="topnav" id="nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span>SATURN</a>
+
+    <div class="navlinks" id="navLinks">
+      <a href="#features" data-i18n="nav.features"></a>
+      <a href="#bots" data-i18n="nav.bots"></a>
+      <a href="#chains" data-i18n="nav.chains"></a>
+      <a href="#dashboard" data-i18n="nav.dashboard"></a>
+      <a href="#security" data-i18n="nav.security"></a>
+      <a href="#referrals" data-i18n="nav.referrals"></a>
+      <div class="dd">
+        <button type="button" aria-haspopup="true"><span data-i18n="nav.faq"></span><span class="chev">▾</span></button>
+        <div class="dd-menu"><div>
+          <a href="#faq-getting-started" data-i18n="nav.faqGettingStarted"></a>
+          <a href="#faq-execution" data-i18n="nav.faqExecution"></a>
+          <a href="#faq-chains" data-i18n="nav.faqChains"></a>
+          <a href="#faq-fees" data-i18n="nav.faqFees"></a>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="nav-cta">
+      <div class="lang desktop-only" id="langDesk">
+        <button type="button" aria-label="Select language" aria-haspopup="true">🌐 <span class="lbl">EN</span> ▾</button>
+        <div class="lang-menu"></div>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="navbar"><span data-i18n="nav.openDashboard"></span></a>
+      <a class="btn btn-gold btn-sm" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="navbar"><span data-i18n="nav.launchTelegram"></span></a>
+      <div class="lang mobile-compact" id="langMob">
+        <button type="button" aria-label="Select language">🌐</button>
+        <div class="lang-menu"></div>
+      </div>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <nav aria-label="Mobile">
+    <a class="mlink" href="#features" data-i18n="nav.features"></a>
+    <a class="mlink" href="#bots" data-i18n="nav.bots"></a>
+    <a class="mlink" href="#chains" data-i18n="nav.chains"></a>
+    <a class="mlink" href="#dashboard" data-i18n="nav.dashboard"></a>
+    <a class="mlink" href="#security" data-i18n="nav.security"></a>
+    <a class="mlink" href="#referrals" data-i18n="nav.referrals"></a>
+    <a class="mlink" href="#faq" data-i18n="nav.faq"></a>
+    <a class="msub" href="#faq-getting-started" data-i18n="nav.faqGettingStarted"></a>
+    <a class="msub" href="#faq-execution" data-i18n="nav.faqExecution"></a>
+    <a class="msub" href="#faq-chains" data-i18n="nav.faqChains"></a>
+    <a class="msub" href="#faq-fees" data-i18n="nav.faqFees"></a>
+  </nav>
+  <div class="mctas">
+    <a class="btn btn-gold" style="min-height:48px" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="navbar_mobile"><span data-i18n="nav.launchTelegram"></span></a>
+    <a class="btn btn-ghost" style="min-height:48px" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="navbar_mobile"><span data-i18n="nav.openDashboard"></span></a>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="saturn-stage" aria-hidden="true">
+    <div class="saturn-spin">
+      <div class="saturn-tilt">
+        <div class="saturn-body"></div>
+        <div class="ring ring-b"></div>
+        <div class="ring ring-a"></div>
+        <div class="ring ring-c"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="eyebrow reveal in"><span class="pulse"></span><span class="txt" data-i18n="hero.badge"></span></div>
+  <h1 class="mega reveal in d1"><span data-i18n="hero.title1"></span><span class="grad" data-i18n="hero.title2"></span></h1>
+  <p class="hero-sub reveal in d2" data-i18n="hero.description"></p>
+  <div class="hero-ctas reveal in d3">
+    <a class="btn btn-gold" style="min-height:48px" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="hero"><span data-i18n="hero.ctaTelegram"></span></a>
+    <a class="btn btn-ghost" style="min-height:48px" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="hero"><span data-i18n="hero.ctaDashboard"></span> ↗</a>
+  </div>
+  <p class="hero-sub2 reveal in d4" data-i18n="hero.subtext"></p>
+  <div class="hero-stats reveal in d5">
+    <div class="hstat"><b>10</b><span data-i18n="hero.stat.wallets"></span></div>
+    <div class="hstat"><b>5</b><span data-i18n="hero.stat.referralTiers"></span></div>
+    <div class="hstat"><b>2.0%</b><span data-i18n="hero.stat.maxRate"></span></div>
+    <div class="hstat"><b>24/7</b><span data-i18n="hero.stat.snipers"></span></div>
+  </div>
+  <div class="scroll-hint" aria-hidden="true"><span>Scroll</span><span class="line"></span></div>
+</header>
+
+<!-- chain ticker -->
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="chainTicker"></div></div>
+<!-- command chips ticker -->
+<div class="cmds" aria-hidden="true"><div class="cmds-track" id="cmdTicker"></div></div>
+
+<!-- ============ TRUST STRIP ============ -->
+<section class="trust" id="trust" aria-label="Key metrics" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="panel trust-panel reveal">
+      <div class="trust-grid">
+        <div class="tmet"><span class="ic">⚡</span><div><b data-count="3">0</b><span data-i18n="trust.productionBots"></span></div></div>
+        <div class="tmet"><span class="ic">▦</span><div><b data-count="6">0</b><span data-i18n="trust.chainsLive"></span></div></div>
+        <div class="tmet"><span class="ic">◉</span><div><b data-count="10">0</b><span data-i18n="trust.walletsPerChain"></span></div></div>
+        <div class="tmet"><span class="ic">🛡</span><div><b><span data-count="100">0</span>%</b><span data-i18n="trust.nonCustodial"></span></div></div>
+        <div class="tmet"><span class="ic">◎</span><div><b>24/7</b><span data-i18n="trust.snipersWatch"></span></div></div>
+      </div>
+      <div class="trust-roll">
+        <span class="vbadge" data-i18n="trust.verified"></span>
+        <div class="roll-box" id="trustRoll"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="features.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="features.title1"></span><span class="grad" data-i18n="features.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="features.description"></p>
+    <div class="features" id="featureGrid"></div>
+  </div>
+</section>
+
+<!-- ============ BOTS ============ -->
+<section id="bots" style="padding-top:30px">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="bots.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="bots.title1"></span><span class="grad" data-i18n="bots.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="bots.description"></p>
+    <div class="bots-grid" id="botsGrid"></div>
+  </div>
+</section>
+
+<!-- ============ CHAINS ============ -->
+<section id="chains">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="chains.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="chains.title1"></span><span style="color:var(--muted)" data-i18n="chains.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="chains.description"></p>
+    <div class="chain-cards" id="chainCards"></div>
+    <div class="expanding reveal d3">
+      <div class="ex-head"><h3 data-i18n="chains.comingSoon"></h3><span class="roll-badge" data-i18n="chains.rollingOut"></span></div>
+      <p data-i18n="chains.comingSoonDesc"></p>
+      <ul class="ex-list" id="exList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GETTING STARTED ============ -->
+<section id="getting-started">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="gettingStarted.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="gettingStarted.title1"></span><span class="grad" data-i18n="gettingStarted.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="gettingStarted.description"></p>
+    <div class="steps" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px" id="stepsGrid">
+      <div class="step reveal d1" style="position:relative;border:1px solid var(--line);border-radius:18px;padding:26px 22px;background:var(--panel);transition:border-color .3s,transform .3s" onmouseover="this.style.borderColor='rgba(244,185,66,.4)'" onmouseout="this.style.borderColor='var(--line)'"><div class="num" style="font-family:var(--mono);font-size:42px;font-weight:700;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.85">01</div><h3 style="font-size:16px;margin:12px 0 7px" data-i18n="gettingStarted.s1.title"></h3><p style="color:var(--muted);font-size:13.5px" data-i18n="gettingStarted.s1.body"></p></div>
+      <div class="step reveal d2" style="position:relative;border:1px solid var(--line);border-radius:18px;padding:26px 22px;background:var(--panel);transition:border-color .3s,transform .3s" onmouseover="this.style.borderColor='rgba(244,185,66,.4)'" onmouseout="this.style.borderColor='var(--line)'"><div class="num" style="font-family:var(--mono);font-size:42px;font-weight:700;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.85">02</div><h3 style="font-size:16px;margin:12px 0 7px" data-i18n="gettingStarted.s2.title"></h3><p style="color:var(--muted);font-size:13.5px" data-i18n="gettingStarted.s2.body"></p></div>
+      <div class="step reveal d3" style="position:relative;border:1px solid var(--line);border-radius:18px;padding:26px 22px;background:var(--panel);transition:border-color .3s,transform .3s" onmouseover="this.style.borderColor='rgba(244,185,66,.4)'" onmouseout="this.style.borderColor='var(--line)'"><div class="num" style="font-family:var(--mono);font-size:42px;font-weight:700;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.85">03</div><h3 style="font-size:16px;margin:12px 0 7px" data-i18n="gettingStarted.s3.title"></h3><p style="color:var(--muted);font-size:13.5px" data-i18n="gettingStarted.s3.body"></p></div>
+      <div class="step reveal d4" style="position:relative;border:1px solid var(--line);border-radius:18px;padding:26px 22px;background:var(--panel);transition:border-color .3s,transform .3s" onmouseover="this.style.borderColor='rgba(244,185,66,.4)'" onmouseout="this.style.borderColor='var(--line)'"><div class="num" style="font-family:var(--mono);font-size:42px;font-weight:700;background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.85">04</div><h3 style="font-size:16px;margin:12px 0 7px" data-i18n="gettingStarted.s4.title"></h3><p style="color:var(--muted);font-size:13.5px" data-i18n="gettingStarted.s4.body"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS SLIDER ============ -->
+<section id="results" style="padding-top:30px">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="results.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="results.title1"></span><span class="grad" data-i18n="results.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="results.description"></p>
+    <div class="slider reveal d3" id="slider">
+      <div class="slider-view"><div class="slider-track" id="sliderTrack"></div></div>
+      <div class="slider-ui">
+        <div class="dots" id="sliderDots"></div>
+        <div class="arrows">
+          <button type="button" id="slPrev" aria-label="Previous">‹</button>
+          <button type="button" id="slNext" aria-label="Next">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD SIM ============ -->
+<section id="dashboard" style="padding-top:30px">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="dashboard.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="dashboard.title1"></span><span class="grad" data-i18n="dashboard.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="dashboard.description"></p>
+
+    <div class="panel dash-panel reveal d3">
+      <div class="dtabs" id="dtabs" role="tablist">
+        <button type="button" role="tab" data-tab="overview" class="on" data-i18n="dashboard.tab.overview"></button>
+        <button type="button" role="tab" data-tab="monitor" data-i18n="dashboard.tab.monitor"></button>
+        <button type="button" role="tab" data-tab="positions" data-i18n="dashboard.tab.positions"></button>
+        <button type="button" role="tab" data-tab="wallets" data-i18n="dashboard.tab.wallets"></button>
+      </div>
+      <div class="dbody">
+        <div id="tab-overview">
+          <div class="dstats">
+            <div class="dcell"><div class="dl" data-i18n="dashboard.portfolioValue"></div><div class="dv" id="dPort">$12,847</div><div class="dp up" id="dPct">▲ 0.0%</div></div>
+            <div class="dcell"><div class="dl" data-i18n="dashboard.pnl24h"></div><div class="dv up" id="dPnl">+$2,034</div></div>
+            <div class="dcell"><div class="dl" data-i18n="dashboard.trades"></div><div class="dv" id="dTrades">47</div></div>
+            <div class="dcell wide">
+              <div class="dl" data-i18n="dashboard.liveFeed"></div>
+              <div class="dfeed" id="dFeed"><div class="frow" style="color:var(--dim)" data-i18n="dashboard.noActivity"></div></div>
+            </div>
+            <div class="dcell"><div class="dbars" id="dBars"></div></div>
+          </div>
+        </div>
+        <div id="tab-monitor" hidden></div>
+        <div id="tab-positions" hidden><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px" id="posGrid"></div></div>
+        <div id="tab-wallets" hidden></div>
+      </div>
+    </div>
+    <div class="dash-cta reveal d4">
+      <a class="btn btn-gold" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="dashboard_section"><span data-i18n="hero.ctaDashboard"></span> ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ECOSYSTEM / PHONE ============ -->
+<section id="ecosystem" style="padding-top:30px">
+  <div class="wrap">
+    <div class="dash">
+      <div class="phone reveal d2" id="phone" aria-label="Telegram bot demo">
+        <div class="ph-head">
+          <div class="ava" aria-hidden="true">S</div>
+          <div><b>Saturn Sniper</b><span>● online</span></div>
+        </div>
+        <div class="ph-body" id="phBody"></div>
+        <div class="ph-input"><div class="fake">Paste a contract address…</div><div class="send" aria-hidden="true">↑</div></div>
+      </div>
+      <div>
+        <div class="kicker reveal" data-i18n="ecosystem.eyebrow"></div>
+        <h2 class="title reveal d1" style="font-size:clamp(26px,3.2vw,38px)"><span data-i18n="ecosystem.title1"></span><span class="grad" data-i18n="ecosystem.title2"></span></h2>
+        <p class="lede reveal d2" data-i18n="ecosystem.description"></p>
+        <div class="surfaces">
+          <div class="surface reveal d1"><div class="node">01</div><div><h3 data-i18n="ecosystem.n1.name"></h3><p data-i18n="ecosystem.n1.body"></p></div></div>
+          <div class="surface reveal d2"><div class="node">02</div><div><h3 data-i18n="ecosystem.n2.name"></h3><p data-i18n="ecosystem.n2.body"></p></div></div>
+          <div class="surface reveal d3"><div class="node">03</div><div><h3 data-i18n="ecosystem.n3.name"></h3><p data-i18n="ecosystem.n3.body"></p></div></div>
+          <div class="surface reveal d4"><div class="node">04</div><div><h3 data-i18n="ecosystem.n4.name"></h3><p data-i18n="ecosystem.n4.body"></p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section id="security">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="security.eyebrow"></div>
+    <h2 class="title reveal d1"><span data-i18n="security.title1"></span><span class="grad" data-i18n="security.title2"></span></h2>
+    <p class="lede reveal d2" data-i18n="security.description"></p>
+    <div class="sec-grid" id="secGrid"></div>
+    <p class="sec-note reveal d4"><span data-i18n="security.disclaimer"></span> <a href="https://docs.saturnbots.org/" target="_blank" rel="noopener" data-cta="docs" data-placement="security">docs.saturnbots.org</a></p>
+  </div>
+</section>
+
+<!-- ============ REFERRAL ============ -->
+<section id="referrals">
+  <div class="wrap">
+    <div class="kicker reveal" data-i18n="referral.eyebrow"></div>
+    <h2 class="title reveal d1" data-i18n="referral.title1"></h2>
+    <p class="lede reveal d2" data-i18n="referral.description"></p>
+    <div class="tiers">
+      <div class="tier reveal d1"><div class="gem">🥉</div><h3>Bronze</h3><div class="refs" data-i18n="referral.refs0"></div><div class="bonus">0.5%</div></div>
+      <div class="tier reveal d2"><div class="gem">🥈</div><h3>Silver</h3><div class="refs" data-i18n="referral.refs5"></div><div class="bonus">0.75%</div></div>
+      <div class="tier reveal d3"><div class="gem">🥇</div><h3>Gold</h3><div class="refs" data-i18n="referral.refs15"></div><div class="bonus">1.0%</div></div>
+      <div class="tier reveal d4"><div class="gem">🏆</div><h3>Platinum</h3><div class="refs" data-i18n="referral.refs30"></div><div class="bonus">1.5%</div></div>
+      <div class="tier diamond reveal d5"><div class="gem">💎</div><h3>Diamond</h3><div class="refs" data-i18n="referral.refs50"></div><div class="bonus">2.0%</div></div>
+    </div>
+    <p class="sec-note reveal d6" data-i18n="referral.ctaBody"></p>
+    <div style="margin-top:30px" class="reveal d6">
+      <a class="btn btn-gold" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="referrals"><span data-i18n="referral.cta"></span> ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div style="text-align:center">
+      <div class="kicker reveal" style="justify-content:center" data-i18n="faq.eyebrow"></div>
+      <h2 class="title reveal d1" style="margin:0 auto"><span data-i18n="faq.title1"></span><span class="grad" data-i18n="faq.title2"></span></h2>
+      <p class="lede reveal d2" style="margin-left:auto;margin-right:auto" data-i18n="faq.description"></p>
+    </div>
+    <div class="faq-grid" id="faqGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="cta">
+  <div class="kicker reveal" style="justify-content:center" data-i18n="finalCta.liveOn"></div>
+  <h2 class="reveal d1"><span data-i18n="finalCta.title1"></span><span class="grad" data-i18n="finalCta.title2"></span>?</h2>
+  <p class="lede reveal d2" style="margin-left:auto;margin-right:auto" data-i18n="finalCta.description"></p>
+  <div class="btns reveal d3">
+    <a class="btn btn-gold" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="final_cta"><span data-i18n="finalCta.ctaTelegram"></span></a>
+    <a class="btn btn-ghost" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="final_cta"><span data-i18n="finalCta.ctaDashboard"></span> ↗</a>
+  </div>
+  <div class="counters reveal d4">
+    <div class="counter"><b data-count="6">0</b><span data-i18n="trust.chainsLive"></span></div>
+    <div class="counter"><b data-count="10">0</b><span data-i18n="trust.walletsPerChain"></span></div>
+    <div class="counter"><b data-count="11">0</b><span>Products in suite</span></div>
+    <div class="counter"><b data-count="0">0%</b><span>KYC required</span></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="f-inner">
+    <div>
+      <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span>SATURN</a>
+      <p class="f-tag" data-i18n="footer.tagline"></p>
+      <div class="f-ctas">
+        <a class="btn btn-gold btn-sm" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="footer"><span data-i18n="footer.ctaTelegram"></span></a>
+        <a class="btn btn-ghost btn-sm" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="footer"><span data-i18n="footer.ctaDashboard"></span></a>
+      </div>
+    </div>
+    <nav aria-label="Product">
+      <h4 data-i18n="footer.colProduct"></h4>
+      <ul>
+        <li><a href="#features" data-i18n="nav.features"></a></li>
+        <li><a href="#bots" data-i18n="nav.bots"></a></li>
+        <li><a href="#chains" data-i18n="nav.chains"></a></li>
+        <li><a href="#dashboard" data-i18n="nav.dashboard"></a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Get started">
+      <h4 data-i18n="footer.colGetStarted"></h4>
+      <ul>
+        <li><a href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="footer_links" data-i18n="footer.linkSolana"></a></li>
+        <li><a href="https://t.me/Saturnethbot" target="_blank" rel="noopener" data-cta="telegram_eth" data-placement="footer_links" data-i18n="footer.linkEthereum"></a></li>
+        <li><a href="https://t.me/Saturnbscbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="footer_links" data-i18n="footer.linkBsc"></a></li>
+        <li><a href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="footer_links" data-i18n="footer.linkDashboard"></a></li>
+        <li><a href="https://docs.saturnbots.org" target="_blank" rel="noopener" data-cta="docs" data-placement="footer_links" data-i18n="footer.linkDocs"></a></li>
+        <li><a href="https://x.com/saturnsolbot" target="_blank" rel="noopener" data-cta="twitter" data-placement="footer_links" data-i18n="footer.linkTwitter"></a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="f-bottom">
+    <p>© <span id="year"></span> Saturn. <span data-i18n="footer.copyright"></span></p>
+    <p class="disc" data-i18n="footer.disclaimer"></p>
+  </div>
+</footer>
+
+<script>
+"use strict";
+/* ============================== i18n ============================== */
+const EN={
+"nav.features":"Features","nav.bots":"Bots","nav.chains":"Chains","nav.dashboard":"Dashboard","nav.security":"Security","nav.referrals":"Referrals","nav.faq":"FAQ",
+"nav.faqGettingStarted":"Getting started","nav.faqExecution":"Execution engines","nav.faqChains":"Chains & security","nav.faqFees":"Fees & referrals",
+"nav.launchTelegram":"Launch on Telegram","nav.openDashboard":"Open Web Dashboard",
+"hero.badge":"Live on Solana, Ethereum & BSC · more chains soon",
+"hero.title1":"Trade at orbit speed.","hero.title2":"Snipe, copy, protect.",
+"hero.description":"Saturn is a multi-chain trading bot and dashboard ecosystem. Paste a contract in Telegram and get a full trading panel — safety checks, live price, multi-wallet execution — with MEV-protected routing and the same positions engine on the web.",
+"hero.ctaTelegram":"Launch on Telegram","hero.ctaDashboard":"Open Web Dashboard",
+"hero.subtext":"No KYC · Non-custodial · Start in seconds",
+"hero.stat.wallets":"Wallets per chain","hero.stat.referralTiers":"Referral tiers","hero.stat.maxRate":"Max referral rate","hero.stat.snipers":"Snipers on watch",
+"trust.productionBots":"Production sniper bots","trust.chainsLive":"Chains routed live","trust.walletsPerChain":"Wallets per chain","trust.nonCustodial":"Non-custodial keys","trust.snipersWatch":"Snipers on watch","trust.verified":"Verified",
+"trust.h1":"Mempool sniping on liquidity-add","trust.h2":"MEV-protected routing via Jito & Flashbots","trust.h3":"Copy trading with per-wallet sizing","trust.h4":"Limit orders, DCA and trailing stops","trust.h5":"Whale alerts and live PnL cards","trust.h6":"Automatic on-chain referral payouts",
+"features.eyebrow":"Shipped, not roadmap","features.title1":"Every surface the bot ","features.title2":"actually runs",
+"features.description":"Saturn is a trading terminal that lives in Telegram. These are the engines behind it — each one a named capability inside the product, not a marketing category.",
+"features.f1.name":"Pasted Contracts","features.f1.body":"Paste any CA into chat and Saturn returns a full trading panel: live price and 24h change, liquidity, market cap, top-holder distribution, honeypot / mint / freeze checks, and direct buy/sell.",
+"features.f2.name":"Auto Snipe","features.f2.body":"Queue contracts or deployer wallets and fire at liquidity-add. Modes: Method ID (fires on addLiquidity), liquidity threshold, or wallet copy.",
+"features.f3.name":"Limit Orders","features.f3.body":"Trigger on exact price, market-cap crossing, multiplier (2x / 5x / 10x), or trailing stop.",
+"features.f4.name":"DCA Orders","features.f4.body":"Dollar-cost average into any token with fixed-amount recurring buys on a custom interval. Pause or resume any time.",
+"features.f5.name":"Copy Trade","features.f5.body":"Mirror any wallet with a configurable copy %, max buy size, blacklist and stop conditions.",
+"features.f6.name":"Whale Alerts","features.f6.body":"Get pinged the moment a tracked or known whale wallet buys or sells, with the swap size and route surfaced instantly.",
+"features.f7.name":"Trade Monitor & Positions","features.f7.body":"A real-time portfolio engine with multi-wallet parallel execution — select one, several, or all wallets — plus live PnL, average entry and USD value per holding.",
+"features.f8.name":"MEV Protection","features.f8.body":"Private-bundle routing — Jito on Solana, Flashbots on EVM — to block sandwich attacks. Toggleable per chain.",
+"features.f9.name":"Multi-Wallet","features.f9.body":"Run up to 10 wallets per chain — generate fresh in-bot or import via private key — and select any combination for parallel execution on one trade.",
+"features.f10.name":"Discover","features.f10.body":"Surface trending tokens, fresh launches and high-volume pairs across every routed DEX, ranked by real-time momentum.",
+"features.f11.name":"Global Settings","features.f11.body":"Quick-buy presets, sell % presets, separate buy and sell slippage, Solana priority lamports, EVM gas tip — configured per chain.",
+"features.f12.name":"Bridge","features.f12.body":"Move capital cross-chain without leaving Telegram, with cheapest-route aggregation.",
+"bots.eyebrow":"Ecosystem","bots.title1":"Three bots live today. ","bots.title2":"Seven more shipping.",
+"bots.description":"Solana, Ethereum and BSC sniper bots are in production, with full documentation for every command and setting. The rest of the Saturn suite is honestly labelled as coming soon.",
+"bots.status.production":"Production","bots.status.soon":"Coming soon","bots.cta":"Open on Telegram","bots.ctaDocs":"docs.saturnbots.org",
+"bots.solana.name":"Saturn Solana Sniper Bot","bots.solana.body":"The core Solana trading bot — mempool sniping, pasted contracts, PnL cards, DCA, limit orders, copy trading, and whale alerts.",
+"bots.ethereum.name":"Saturn Ethereum Sniper Bot","bots.ethereum.body":"The core ETH trading bot — mempool sniping, pasted contracts, PnL cards, DCA, limit orders, copy trading, and whale alerts across all EVM chains.",
+"bots.bsc.name":"Saturn BSC Sniper Bot","bots.bsc.body":"The core BSC trading bot — mempool sniping, pasted contracts, PnL cards, DCA, limit orders, copy trading, and whale alerts on BNB Chain.",
+"bots.docs.name":"Saturn Docs","bots.docs.body":"Full documentation for every Saturn bot — setup guides, command references, API docs, and troubleshooting.",
+"bots.autocaller.name":"Saturn Autocaller","bots.autocaller.body":"Scrape Telegram channels for contracts in real time. Auto-publish formatted calls to your channel with AI hooks.",
+"bots.volume.name":"Saturn Volume Bot","bots.volume.body":"Generate organic-looking trading volume on any token to boost visibility and attract buyers on DEXes.",
+"bots.safeguard.name":"Saturn Safeguard","bots.safeguard.body":"Security-first token scanner — honeypots, mint authority, freeze authority, and rug-pull risk before you buy.",
+"bots.chatup.name":"Saturn ChatUp","bots.chatup.body":"AI-powered Telegram community manager with automated responses, onboarding flows, and multi-chain payment processing.",
+"bots.dexscreen.name":"Saturn DexScreen","bots.dexscreen.body":"Real-time DEX screener with live pair data, price charts, and liquidity tracking across all major exchanges.",
+"bots.moonTok.name":"Saturn MoonTok","bots.moonTok.body":"Trending token discovery engine that surfaces high-potential launches before they go viral.",
+"bots.majorDex.name":"Saturn MajorDex","bots.majorDex.body":"Multi-instance DEX aggregator that finds the best routing and pricing across all supported DEXes.",
+"chains.eyebrow":"Chain coverage","chains.title1":"Solana, Ethereum, BSC & Tron in production. ","chains.title2":"Other chains coming soon.",
+"chains.description":"Saturn ships DEX-integrated execution on 6 chains today. Everything else is honestly labelled as rolling out — no chain is claimed live before it's actually routing trades.",
+"chains.status.production":"Production","chains.comingSoon":"Coming soon","chains.rollingOut":"Rolling out",
+"chains.comingSoonDesc":"Queued for adapter work — same wallet, preset and MEV-protection architecture, wired in chain by chain.",
+"chains.solana.blurb":"Flagship chain. Routed directly across the pools traders actually use.","chains.solana.note1":"Private-bundle routing via Jito","chains.solana.note2":"Priority-lamport control per trade","chains.solana.note3":"Up to 10 wallets, parallel execution",
+"chains.ethereum.blurb":"EVM-native execution across Ethereum, Base and Arbitrum today.","chains.ethereum.note1":"MEV-protected routing via Flashbots","chains.ethereum.note2":"Gas and priority-fee control per trade","chains.ethereum.note3":"EVM-native, same engine on every live network",
+"chains.tron.blurb":"Tron-native execution, wired into the same account and presets.","chains.tron.note1":"Native TRC-20 execution","chains.tron.note2":"Same wallet and preset architecture as EVM","chains.tron.note3":"Live routing across the top Tron DEXes",
+"chains.bsc.blurb":"BSC-native execution across the DEXes traders use on BNB Chain.","chains.bsc.note1":"MEV-protected routing via Flashbots","chains.bsc.note2":"Gas and priority-fee control per trade","chains.bsc.note3":"Same engine and presets as all EVM chains",
+"gettingStarted.eyebrow":"Getting started","gettingStarted.title1":"From zero to first snipe ","gettingStarted.title2":"in minutes",
+"gettingStarted.description":"No accounts department, no onboarding calls. Four steps and you're live on-chain.",
+"gettingStarted.s1.title":"Open the bot","gettingStarted.s1.body":"Start Saturn on Telegram or open the web dashboard. No sign-up, no KYC, no email required to trade.",
+"gettingStarted.s2.title":"Fund a wallet","gettingStarted.s2.body":"Generate or import up to 10 wallets per chain. Keys are encrypted and stay with your account — never pooled or held.",
+"gettingStarted.s3.title":"Set your presets","gettingStarted.s3.body":"Buy amounts, slippage, gas tips, MEV protection and auto-sell multipliers — configure once per chain, reuse forever.",
+"gettingStarted.s4.title":"Trade & automate","gettingStarted.s4.body":"Paste a contract, arm a sniper, mirror a whale, or let limit and DCA orders run while Telegram is closed.",
+"results.eyebrow":"What the engine does","results.title1":"Capabilities, ","results.title2":"in production",
+"results.description":"Every card below maps to a shipped engine in the Solana, Ethereum and BSC bots. Hover to pause the rotation.",
+"results.s1.tag":"Auto Snipe","results.s1.metric":"Same-block entries","results.s1.body":"Method ID mode watches for addLiquidity and submits the buy in the same block the pool goes live — no manual paste, no refresh loop.","results.s1.proof":"Solana · Raydium, Pump.fun, Meteora, Orca",
+"results.s2.tag":"MEV Protection","results.s2.metric":"Private bundle routing","results.s2.body":"Orders leave through Jito bundles on Solana and Flashbots on EVM, so your entry never sits in a public mempool waiting to be sandwiched.","results.s2.proof":"Toggleable per chain in Global Settings",
+"results.s3.tag":"Multi-wallet","results.s3.metric":"10 wallets in parallel","results.s3.body":"Split a single trade across up to ten wallets per chain, generated in-bot or imported by private key, all executing on the same trigger.","results.s3.proof":"Non-custodial — keys stay with your account",
+"results.s4.tag":"Copy Trade","results.s4.metric":"Mirror any wallet","results.s4.body":"Track a leader wallet and mirror its buys with a fixed size or a percentage of its position, routed through the wallets you selected.","results.s4.proof":"Works alongside whale alerts",
+"results.s5.tag":"Limit Orders","results.s5.metric":"4 trigger types","results.s5.body":"Arm exits on exact price, market-cap crossing, multiplier targets (2x / 5x / 10x) or a trailing stop, and let the engine watch the chart for you.","results.s5.proof":"Runs 24/7 whether or not Telegram is open",
+"results.s6.tag":"Referrals","results.s6.metric":"Up to 2.0% payouts","results.s6.body":"Five tiers from Bronze to Diamond scale your cut as your referral count grows, with payouts settled automatically on-chain.","results.s6.proof":"Bronze 0.5% → Diamond 2.0% at 50+ refs",
+"dashboard.eyebrow":"Web dashboard","dashboard.title1":"The same engine, on a ","dashboard.title2":"full-size terminal",
+"dashboard.description":"Telegram is the trigger. The web dashboard is the cockpit — the same wallets, the same positions, the same monitor stream, rendered with room to breathe.",
+"dashboard.tab.overview":"Overview","dashboard.tab.monitor":"Trade Monitor","dashboard.tab.positions":"Positions","dashboard.tab.wallets":"Wallets",
+"dashboard.portfolioValue":"Portfolio Value","dashboard.pnl24h":"24h PnL","dashboard.trades":"Trades","dashboard.liveFeed":"Live Feed","dashboard.noActivity":"Waiting for first trade…",
+"dashboard.p1.name":"Live PnL cards","dashboard.p1.body":"Every open position shows average entry, current price, position value and realised plus unrealised PnL.",
+"dashboard.p2.name":"Per-wallet breakdown","dashboard.p2.body":"See which of your wallets holds what, so partial exits can be routed wallet by wallet.",
+"dashboard.p3.name":"One-tap exits","dashboard.p3.body":"Sell 25 / 50 / 100% straight from a position, with the same MEV-protected routing as the entry.",
+"dashboard.p4.name":"Armed orders","dashboard.p4.body":"Limit orders, DCA legs and trailing stops attached to a position are listed alongside it.",
+"dashboard.balance":"Balance","dashboard.active":"Active","dashboard.inactive":"Inactive",
+"ecosystem.eyebrow":"One system","ecosystem.title1":"Four surfaces, ","ecosystem.title2":"one orbit",
+"ecosystem.description":"Saturn isn't a bot plus a website. It's a single account with a shared execution core — whichever surface you touch, the state is the same.",
+"ecosystem.n1.name":"Telegram bot","ecosystem.n1.body":"@Saturnsolbot. Launch, and the account is created on first message. Paste contracts, arm snipers, fire trades.",
+"ecosystem.n2.name":"Execution engines","ecosystem.n2.body":"Auto Snipe, Copy Trade and Limit Orders run continuously, firing on liquidity-add, mirrored wallets or price/market-cap triggers.",
+"ecosystem.n3.name":"Shared account state","ecosystem.n3.body":"Wallets, per-chain settings, slippage and presets are one account — configure once, applies to bot and dashboard alike.",
+"ecosystem.n4.name":"Web dashboard","ecosystem.n4.body":"Trade Monitor, Positions and Wallets on a full screen, reading the same real-time portfolio engine.",
+"security.eyebrow":"Security","security.title1":"Protection that runs ","security.title2":"before the fill",
+"security.description":"Only what the product actually does — routing, wallet isolation, and contract checks that fire before capital moves.",
+"security.p1.name":"Non-custodial by design","security.p1.l1":"Wallets and keys belong to your account, never pooled","security.p1.l2":"Generate fresh in-bot or import via private key","security.p1.l3":"Nothing is held or custodied by Saturn at any point",
+"security.p2.name":"Pre-trade checks","security.p2.l1":"Honeypot detection on every Pasted Contract","security.p2.l2":"Mint and freeze authority status surfaced up-front","security.p2.l3":"Liquidity and top-holder distribution before you buy",
+"security.p3.name":"MEV protection","security.p3.l1":"Private-bundle routing — Jito on Solana, Flashbots on EVM","security.p3.l2":"Blocks sandwich attacks on the mempool path","security.p3.l3":"Toggleable per chain in Global Settings",
+"security.p4.name":"Pre-trade bundle simulation","security.p4.l1":"Every bundle is simulated before it's sent","security.p4.l2":"Catches failing trades before they cost gas","security.p4.l3":"Applies to snipes, limit orders and copy trades alike",
+"security.p5.name":"Best-route execution","security.p5.l1":"Routes across the DEXes with the deepest live liquidity","security.p5.l2":"Same engine picks the venue on Solana and every EVM chain","security.p5.l3":"No manual pool hunting — the router does it per trade",
+"security.p6.name":"Wallet isolation","security.p6.l1":"Up to 10 wallets per chain, isolated per role","security.p6.l2":"Select one, several or all wallets per execution","security.p6.l3":"Split exposure across snipers, mains and cold storage",
+"security.disclaimer":"Full security and key-custody details are documented at",
+"referral.eyebrow":"Referral program","referral.title1":"5-tier referral program",
+"referral.description":"Share your referral link and earn trading fee bonuses from every referee. The more you refer, the higher your tier — with automatic on-chain payouts.",
+"referral.cta":"Get your referral link",
+"referral.ctaBody":"Start at Bronze with 0 referrals. Climb to Diamond at 50+ refs for the maximum 2% bonus rate on every referred trade. Payouts are automatic — no claims, no waiting.",
+"referral.refs0":"0 refs","referral.refs5":"5 refs","referral.refs15":"15 refs","referral.refs30":"30 refs","referral.refs50":"50+ refs",
+"faq.eyebrow":"FAQ","faq.title1":"Straight ","faq.title2":"answers",
+"faq.description":"Grouped by what you're actually trying to do. Every answer reflects what the bots ship today.",
+"faq.g1.label":"Getting started",
+"faq.g1.q1":"Do I need to sign up or complete KYC?","faq.g1.a1":"No KYC, ever. The Telegram bot needs zero sign-up — open @Saturnsolbot (Solana), @Saturnethbot (Ethereum and EVM) or the BSC bot and your account is created on the first message. The web dashboard offers optional account creation via Telegram Connect, email, magic link, or link code — but it's not required to start trading. Both paths are non-custodial.",
+"faq.g1.q2":"How many wallets can I run?","faq.g1.a2":"Up to 10 per chain. Generate them in-bot or import via private key, then select one, several or all of them for parallel execution on a single trade.",
+"faq.g1.q3":"Is there a web dashboard?","faq.g1.a3":"Yes — app.saturnbots.org runs the same account, wallets and positions engine as the bots, with Trade Monitor, Positions and Wallets on a full screen.",
+"faq.g2.label":"Execution engines",
+"faq.g2.q1":"How does Auto Snipe fire?","faq.g2.a1":"Queue a contract address or a deployer wallet. It fires at liquidity-add, in one of three modes: Method ID (on addLiquidity), liquidity threshold, or wallet copy.",
+"faq.g2.q2":"What triggers can Limit Orders use?","faq.g2.a2":"Exact price, market-cap crossing, multiplier (2x / 5x / 10x), or trailing stop.",
+"faq.g2.q3":"How does Copy Trade work?","faq.g2.a3":"Mirror any wallet you track. Set a fixed size or a percentage of the leader's trade, and route the copy through your selected wallets.",
+"faq.g3.label":"Chains & security",
+"faq.g3.q1":"Which chains work today?","faq.g3.a1":"Solana is in production across Raydium, Pump.fun, Meteora and Orca. Ethereum is in production across the EVM networks — Base, Arbitrum, Optimism and Polygon. BSC is live across PancakeSwap and the top BNB Chain DEXes. Tron is live across SunSwap. Other chains are coming soon.",
+"faq.g3.q2":"What stops me getting sandwiched?","faq.g3.a2":"MEV protection routes orders through private bundles — Jito on Solana, Flashbots on EVM. Toggle it per chain in Global Settings.",
+"faq.g3.q3":"Does Saturn hold my funds?","faq.g3.a3":"No. Saturn is non-custodial — wallets belong to you, keys stay with your account, and nothing is pooled or held by the platform.",
+"faq.g4.label":"Fees & referrals",
+"faq.g4.q1":"What does the referral program pay?","faq.g4.a1":"Five tiers, based on referral count: Bronze 0.5%, Silver 0.75% at 5 refs, Gold 1.0% at 15, Platinum 1.5% at 30 and Diamond 2.0% at 50+. Payouts are automatic and on-chain.",
+"faq.g4.q2":"Where is the full documentation?","faq.g4.a2":"docs.saturnbots.org covers setup guides, command references, API docs and troubleshooting for every Saturn bot.",
+"finalCta.liveOn":"Live on 6 chains today","finalCta.title1":"Ready to trade ","finalCta.title2":"faster",
+"finalCta.description":"Launch Saturn on Telegram in seconds. No sign-up, no KYC, no friction. Just paste a contract and start trading.",
+"finalCta.ctaTelegram":"Launch on Telegram","finalCta.ctaDashboard":"Open Web Dashboard",
+"footer.tagline":"Multi-chain trading bot and dashboard ecosystem. Paste, snipe, copy, protect — from Telegram or the web.",
+"footer.ctaTelegram":"Launch on Telegram","footer.ctaDashboard":"Open Web Dashboard","footer.colProduct":"Product","footer.colGetStarted":"Get started",
+"footer.linkSolana":"Solana bot on Telegram","footer.linkEthereum":"Ethereum bot on Telegram","footer.linkBsc":"BSC bot on Telegram","footer.linkDashboard":"Open Web Dashboard","footer.linkDocs":"Documentation","footer.linkTwitter":"Twitter / X",
+"footer.copyright":"All rights reserved.",
+"footer.disclaimer":"Trading digital assets carries risk. Saturn is a non-custodial execution tool, not financial advice."
+};
+const LANGS=[["en","🇬🇧 English"],["fr","🇫🇷 Français"],["es","🇪🇸 Español"],["ar","🇸🇦 العربية"],["pt","🇵🇹 Português"],["zh","🇨🇳 中文"],["ru","🇷🇺 Русский"]];
+const I18N={
+  lang:"en",dict:{en:EN},
+  t(k){return (this.dict[this.lang]&&this.dict[this.lang][k])??EN[k]??k},
+  async load(l){
+    if(this.dict[l])return;
+    try{const r=await fetch("public/locales/"+l+".json");if(!r.ok)throw 0;this.dict[l]=await r.json()}
+    catch(e){this.dict[l]=EN}
+  },
+  async set(l){
+    await this.load(l);this.lang=l;
+    try{localStorage.setItem("saturn-lang",l)}catch(e){}
+    applyI18n();
+  }
+};
+function t(k){return I18N.t(k)}
+
+/* ============================== data-driven renders ============================== */
+const FEATURE_TAGS=["🔍 Scan","📋 My Snipers","🎯 Trigger","🗓️ DCA","👥 Copy","🐋 Watch Whales","📊 Live","🛡️ Private","💳 Wallets","🔥 Trending","⚙️ Presets","🌉 Route"];
+const BOTS=[
+ {live:1,k:"solana",u:"https://t.me/Saturnsolbot",l:"bots.cta"},
+ {live:1,k:"ethereum",u:"https://t.me/Saturnethbot",l:"bots.cta"},
+ {live:1,k:"bsc",u:"https://t.me/Saturnbscbot",l:"bots.cta"},
+ {live:1,k:"docs",u:"https://docs.saturnbots.org/",l:"bots.ctaDocs"},
+ {k:"autocaller"},{k:"volume"},{k:"safeguard"},{k:"chatup"},{k:"dexscreen"},{k:"moonTok"},{k:"majorDex"}
+];
+const CHAIN_CARDS=[
+ {name:"Solana",dexs:["Raydium","Pump.fun","Meteora","Orca"],ck:"solana"},
+ {name:"Ethereum & L2s",dexs:["Uniswap","Base","Arbitrum"],ck:"ethereum"},
+ {name:"BSC",dexs:["PancakeSwap","BiSwap","ApeSwap"],ck:"bsc"},
+ {name:"Tron",dexs:["SunSwap","JustSwap"],ck:"tron"}
+];
+const EXPANDING=["Optimism","Polygon","Avalanche","Sui","Ton","Bitcoin"];
+const CHAIN_TICKER=[["◎","Solana"],["Ξ","Ethereum"],["⬡","Base"],["◆","Arbitrum"],["♦","Tron"],["⬢","BSC"],["◉","Optimism"],["◈","Polygon"],["△","Avalanche"],["◈","Sui"],["◐","Ton"],["₿","Bitcoin"]];
+const COMMANDS=["🎯 Custom Buy","🛡️ Safety Checker","📌 Track","👥 Copy Trade","📋 My Snipers","🐋 Watch Whales","🔍 Scan","🎁 Referrals","📊 Chart","🛑 Disarm Sniper","💳 Wallets"];
+const MONITOR=[
+ {t:"12:04:11",e:"Liquidity add detected",d:"Auto Snipe · Method ID",gold:1},
+ {t:"12:04:11",e:"Bundle submitted via Jito",d:"3 wallets · parallel",gold:1},
+ {t:"12:04:13",e:"Fill confirmed",d:"2.0 SOL @ 0.00302"},
+ {t:"12:31:52",e:"Limit order armed",d:"Multiplier · 5x",gold:1},
+ {t:"13:07:20",e:"Copy trade mirrored",d:"Bp5v…kQ3s · 25%"}
+];
+const WALLETS=[
+ {name:"Main",addr:"7xKX…gAsU",bal:"148.22 SOL",active:true},
+ {name:"Sniper 1",addr:"9Fq2…mR4t",bal:"42.06 SOL",active:true},
+ {name:"Sniper 2",addr:"Cn7d…pL8w",bal:"18.40 SOL",active:true},
+ {name:"Cold",addr:"Ax1s…vZ2b",bal:"310.00 SOL",active:false}
+];
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function renderTickers(){
+  const ct=document.getElementById("chainTicker");
+  const one=CHAIN_TICKER.map(c=>'<span class="tk"><span class="sym">'+c[0]+'</span><span class="nm">'+c[1]+'</span><span class="sep">/</span></span>').join("");
+  ct.innerHTML=one+one;
+  const cmd=document.getElementById("cmdTicker");
+  const cone=COMMANDS.map(c=>'<span class="chip">'+c+"</span>").join("");
+  cmd.innerHTML=cone+cone;
+}
+function renderFeatures(){
+  document.getElementById("featureGrid").innerHTML=FEATURE_TAGS.map((tag,i)=>{
+    const n=i+1;
+    return '<div class="engine reveal" style="transition-delay:'+((i%3)*.07)+'s"><span class="tag">'+tag+'</span><div class="ic">'+tag.split(" ")[0]+'</div><h3>'+esc(t("features.f"+n+".name"))+'</h3><p>'+esc(t("features.f"+n+".body"))+'</p></div>';
+  }).join("");
+}
+function renderBots(){
+  document.getElementById("botsGrid").innerHTML=BOTS.map((b,i)=>{
+    const live=b.live?"live":"soon";
+    const badge='<span class="badge">'+(b.live?"● "+esc(t("bots.status.production")):"◌ "+esc(t("bots.status.soon")))+"</span>";
+    const go=b.u?'<a class="go" href="'+b.u+'" target="_blank" rel="noopener" data-cta="'+(b.k==="docs"?"docs":"telegram")+'" data-placement="bots">'+esc(t(b.l))+" ↗</a>":"";
+    return '<div class="bot '+live+' reveal" style="transition-delay:'+((i%4)*.06)+'s">'+badge+"<h3>"+esc(t("bots."+b.k+".name"))+"</h3><p>"+esc(t("bots."+b.k+".body"))+"</p>"+go+"</div>";
+  }).join("");
+}
+function renderChains(){
+  document.getElementById("chainCards").innerHTML=CHAIN_CARDS.map((c,i)=>{
+    const notes=[1,2,3].map(n=>"<li>"+esc(t("chains."+c.ck+".note"+n))+"</li>").join("");
+    return '<div class="ccard reveal" style="transition-delay:'+(i*.08)+'s"><h3>'+c.name+'<span class="live-badge">'+esc(t("chains.status.production"))+'</span></h3><p class="blurb">'+esc(t("chains."+c.ck+".blurb"))+'</p><div class="dexes">'+c.dexs.map(d=>"<span>"+d+"</span>").join("")+"</div><ul>"+notes+"</ul></div>";
+  }).join("");
+  document.getElementById("exList").innerHTML=EXPANDING.map(c=>"<li>"+c+"</li>").join("");
+}
+/* results slider */
+let slIdx=0,slPaused=false;
+function renderSlider(){
+  const slides=[1,2,3,4,5,6].map(n=>({tag:t("results.s"+n+".tag"),metric:t("results.s"+n+".metric"),body:t("results.s"+n+".body"),proof:t("results.s"+n+".proof")}));
+  document.getElementById("sliderTrack").innerHTML=slides.map(s=>
+    '<div class="slide"><div class="slide-in"><span class="stag">'+esc(s.tag)+'</span><p class="smetric grad">'+esc(s.metric)+'</p><p class="sbody">'+esc(s.body)+'</p><p class="sproof">'+esc(s.proof)+"</p></div></div>"
+  ).join("");
+  document.getElementById("sliderDots").innerHTML=slides.map((s,i)=>'<button type="button" aria-label="'+esc(s.tag)+'" data-i="'+i+'" class="'+(i===slIdx?"on":"")+'"></button>').join("");
+  document.querySelectorAll("#sliderDots button").forEach(b=>b.onclick=()=>{slIdx=+b.dataset.i;updateSlider()});
+}
+function updateSlider(){
+  document.getElementById("sliderTrack").style.transform="translateX(-"+(slIdx*100)+"%)";
+  document.querySelectorAll("#sliderDots button").forEach((b,i)=>b.classList.toggle("on",i===slIdx));
+}
+function slGo(d){slIdx=(slIdx+d+6)%6;updateSlider()}
+/* faq */
+const FAQ_GROUPS=[
+ {id:"faq-getting-started",g:1,n:3},
+ {id:"faq-execution",g:2,n:3},
+ {id:"faq-chains",g:3,n:3},
+ {id:"faq-fees",g:4,n:2}
+];
+const faqOpen={};
+function renderFaq(){
+  document.getElementById("faqGrid").innerHTML=FAQ_GROUPS.map((grp,gi)=>{
+    let items="";
+    for(let i=1;i<=grp.n;i++){
+      const id=grp.id+"-"+(i-1);
+      items+='<details id="'+id+'"'+(faqOpen[id]?" open":"")+'><summary>'+esc(t("faq.g"+grp.g+".q"+i))+'<span class="plus">+</span></summary><div class="a">'+esc(t("faq.g"+grp.g+".a"+i))+"</div></details>";
+    }
+    return '<div class="faq-group reveal" id="'+grp.id+'" style="transition-delay:'+(gi*.07)+'s"><h3>'+esc(t("faq.g"+grp.g+".label"))+"</h3>"+items+"</div>";
+  }).join("");
+  document.querySelectorAll('#faqGrid details').forEach(d=>{
+    d.addEventListener("toggle",()=>{faqOpen[d.id]=d.open});
+  });
+}
+/* security */
+function renderSecurity(){
+  document.getElementById("secGrid").innerHTML=[1,2,3,4,5,6].map((p,i)=>{
+    const lis=[1,2,3].map(l=>"<li>"+esc(t("security.p"+p+".l"+l))+"</li>").join("");
+    return '<div class="sec reveal" style="transition-delay:'+((i%3)*.08)+'s"><h3>'+esc(t("security.p"+p+".name"))+"</h3><ul>"+lis+"</ul></div>";
+  }).join("");
+}
+function renderAll(){
+  renderTickers();renderFeatures();renderBots();renderChains();renderSlider();renderFaq();renderSecurity();renderMonitor();renderPositions();renderWallets();
+  observeReveals();
+}
+function applyI18n(){
+  document.documentElement.lang=I18N.lang;
+  document.documentElement.dir=I18N.lang==="ar"?"rtl":"ltr";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
+  document.querySelectorAll(".lang").forEach(l=>{
+    const lbl=l.querySelector(".lbl");
+    if(lbl)lbl.textContent=I18N.lang.toUpperCase();
+    l.classList.remove("open");
+    l.querySelectorAll(".lang-menu button").forEach(b=>b.classList.toggle("on",b.dataset.l===I18N.lang));
+  });
+  renderAll();
+}
+function buildLangMenus(){
+  document.querySelectorAll(".lang").forEach(l=>{
+    const menu=l.querySelector(".lang-menu");
+    menu.innerHTML=LANGS.map(x=>'<button type="button" data-l="'+x[0]+'"><span>'+x[1]+"</span><span>"+(x[0]===I18N.lang?"✓":"")+"</span></button>").join("");
+    menu.querySelectorAll("button").forEach(b=>b.onclick=()=>I18N.set(b.dataset.l));
+    l.querySelector("button").onclick=e=>{e.stopPropagation();document.querySelectorAll(".lang.open").forEach(o=>{if(o!==l)o.classList.remove("open")});l.classList.toggle("open")};
+  });
+  document.addEventListener("click",()=>document.querySelectorAll(".lang.open").forEach(o=>o.classList.remove("open")));
+}
+
+/* ============================== dashboard sim ============================== */
+let dTab="overview";
+function renderMonitor(){
+  document.getElementById("tab-monitor").innerHTML=MONITOR.map(m=>
+    '<div class="mrow"><span class="mt">'+m.t+'</span><span class="mdot" style="background:'+(m.gold?"var(--gold)":"var(--green)")+'"></span><span class="me">'+m.e+'</span><span class="md">'+m.d+"</span></div>"
+  ).join("");
+}
+function renderPositions(){
+  document.getElementById("posGrid").innerHTML=[1,2,3,4].map(p=>'<div class="pcard"><h4>'+esc(t("dashboard.p"+p+".name"))+"</h4><p>"+esc(t("dashboard.p"+p+".body"))+"</p></div>").join("");
+}
+function renderWallets(){
+  document.getElementById("tab-wallets").innerHTML=WALLETS.map(w=>
+    '<div class="wrow"><span class="wn">'+w.name+'</span><span class="wa">'+w.addr+'</span><span class="wb">'+w.bal+'</span><span class="ws '+(w.active?"act":"ina")+'">'+esc(t(w.active?"dashboard.active":"dashboard.inactive"))+"</span></div>"
+  ).join("");
+}
+document.querySelectorAll("#dtabs button").forEach(b=>b.onclick=()=>{
+  dTab=b.dataset.tab;
+  document.querySelectorAll("#dtabs button").forEach(x=>x.classList.toggle("on",x===b));
+  ["overview","monitor","positions","wallets"].forEach(k=>{document.getElementById("tab-"+k).hidden=k!==dTab});
+});
+/* portfolio simulator */
+const SIM_TOKENS=["SOL/USDC","ETH/USDC","BONK/SOL","WIF/SOL","JUP/SOL","PYTH/SOL"];
+let port=12847,pnl24=2034,trades=47,bars=[40,55,45,65,60,75,70,85,80,95,90,100],feed=[];
+function fmt$(n){return "$"+n.toLocaleString("en-US")}
+function simTick(){
+  const win=Math.random()<.65;
+  const mag=win?Math.round(Math.random()*180+20):-Math.round(Math.random()*120+10);
+  port+=mag;pnl24=Math.max(400,Math.min(3800,pnl24+mag));trades++;
+  feed=[{tok:SIM_TOKENS[Math.floor(Math.random()*SIM_TOKENS.length)],amt:mag},...feed].slice(0,4);
+  const last=bars[bars.length-1];
+  bars=[...bars.slice(1),Math.max(20,Math.min(100,last+mag/200*15))];
+  document.getElementById("dPort").textContent=fmt$(port);
+  const pct=((port-12847)/12847*100);
+  const pe=document.getElementById("dPct");
+  pe.textContent=(pct>=0?"▲ ":"▼ ")+Math.abs(pct).toFixed(1)+"%";pe.className="dp "+(pct>=0?"up":"down");
+  const pnlEl=document.getElementById("dPnl");
+  pnlEl.textContent=(pnl24>=0?"+":"-")+fmt$(Math.abs(pnl24)).slice(0);pnlEl.className="dv "+(pnl24>=0?"up":"down");
+  document.getElementById("dTrades").textContent=trades;
+  document.getElementById("dFeed").innerHTML=feed.map(f=>
+    '<div class="frow"><span class="side '+(f.amt>=0?"up":"down")+'">'+(f.amt>=0?"BUY":"SELL")+'</span><span style="font-weight:500">'+f.tok+'</span><span class="num '+(f.amt>=0?"up":"down")+'">'+(f.amt>=0?"+":"")+f.amt+"</span></div>"
+  ).join("");
+  document.getElementById("dBars").innerHTML=bars.map(b=>'<i style="height:'+b+'%"></i>').join("");
+}
+document.getElementById("dBars").innerHTML=bars.map(b=>'<i style="height:'+b+'%"></i>').join("");
+const simIo=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;simIo.disconnect();
+  simTick();
+  setInterval(simTick,4500+Math.random()*2500);
+}),{threshold:.3});
+simIo.observe(document.getElementById("dashboard"));
+
+/* slider controls */
+document.getElementById("slPrev").onclick=()=>slGo(-1);
+document.getElementById("slNext").onclick=()=>slGo(1);
+const sliderEl=document.getElementById("slider");
+sliderEl.addEventListener("mouseenter",()=>slPaused=true);
+sliderEl.addEventListener("mouseleave",()=>slPaused=false);
+sliderEl.addEventListener("focusin",()=>slPaused=true);
+sliderEl.addEventListener("focusout",()=>slPaused=false);
+setInterval(()=>{if(!slPaused)slGo(1)},4500);
+
+/* ============================== telegram terminal loop ============================== */
+const phBody=document.getElementById("phBody");
+const SCRIPT=[
+ {u:1,h:"You",html:"EqW…9xKp"},
+ {u:0,h:"Saturn · Token Scan",html:'<div class="mh"><span>$MOONPIG</span><span>Solana</span></div><div class="row"><span>Price</span><span>$0.004218 <b class="ok">+24.6%</b></span></div><div class="row"><span>Liquidity</span><span>$482K</span></div><div class="row"><span>MCap</span><span>$4.2M</span></div><div class="row"><span>Honeypot</span><span class="ok">NO ✓</span></div><div class="row"><span>Mint auth</span><span class="ok">REVOKED</span></div><div class="row"><span>Top 10</span><span>19.2%</span></div>',panel:1},
+ {u:1,h:"You",html:"Buy 0.5 SOL · slippage 12%"},
+ {u:0,h:"Saturn · Fill",html:'<div class="mh"><span>BUY EXECUTED</span><span>Bundle ✓</span></div><div class="row"><span>Received</span><span>118,442,901 $MOONPIG</span></div><div class="row"><span>Route</span><span>Raydium → WSOL</span></div><div class="row"><span>MEV</span><span class="ok">Jito private ✓</span></div><div class="row"><span>Wallets</span><span>3 parallel</span></div>'},
+ {u:0,h:"Saturn · Auto-Snipe",html:'<div class="mh"><span>TRIGGER FIRED</span><span>addLiquidity ✓</span></div><div class="row"><span>Token</span><span>$SNIPED (new LP)</span></div><div class="row"><span>Size</span><span>0.25 SOL × 5 wallets</span></div><div class="row"><span>Latency</span><span class="warn">0.42s</span></div>'},
+ {u:0,h:"Saturn · Positions",html:'<div class="mh"><span>PnL</span><span class="ok">+$318.44</span></div><div class="row"><span>$MOONPIG</span><span><b class="ok">+61.2%</b></span></div><div class="row"><span>$SNIPED</span><span><b class="ok">+14.8%</b></span></div><div class="row"><span>$BONK</span><span><b class="down">-3.1%</b></span></div>'}
+];
+let termStep=0,termStarted=false;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+async function terminal(){
+  if(termStarted)return;termStarted=true;
+  if(reduced){
+    SCRIPT.forEach(m=>{const d=document.createElement("div");d.className="msg "+(m.u?"user":"bot");d.innerHTML=(m.u?"":'<div class="mh"><span>'+m.h+"</span></div>")+m.html;phBody.appendChild(d)});
+    return;
+  }
+  while(true){
+    const m=SCRIPT[termStep%SCRIPT.length];
+    const ty=document.createElement("div");ty.className="msg bot";ty.innerHTML='<span class="typing"><i></i><i></i><i></i></span>';
+    phBody.appendChild(ty);
+    while(phBody.children.length>6)phBody.firstChild.remove();
+    await sleep(m.u?450:950);
+    ty.remove();
+    const d=document.createElement("div");d.className="msg "+(m.u?"user":"bot");
+    d.innerHTML=(m.u?"":'<div class="mh"><span>'+m.h+"</span></div>")+m.html;
+    phBody.appendChild(d);
+    while(phBody.children.length>6)phBody.firstChild.remove();
+    await sleep(m.u?1100:m.panel?2100:1500);
+    termStep++;
+  }
+}
+const termIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){terminal();termIo.disconnect()}}),{threshold:.25});
+termIo.observe(document.getElementById("phone"));
+
+/* ============================== atmosphere ============================== */
+const cv=document.getElementById("stars"),ctx=cv.getContext("2d");
+let stars=[],shoots=[],W,H;
+function resize(){
+  W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;
+  const n=Math.min(340,Math.floor(innerWidth*innerHeight/6500));
+  stars=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,z:Math.random()*.9+.1,r:Math.random()*1.4*devicePixelRatio+.3,tw:Math.random()*Math.PI*2}));
+}
+resize();addEventListener("resize",resize);
+function spawnShoot(){shoots.push({x:Math.random()*W*.8+W*.1,y:Math.random()*H*.35,vx:(6+Math.random()*5)*devicePixelRatio,vy:(2.5+Math.random()*2)*devicePixelRatio,life:1})}
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  for(const s of stars){
+    s.tw+=.02+s.z*.02;
+    ctx.globalAlpha=(.35+.65*Math.abs(Math.sin(s.tw)))*s.z;
+    ctx.fillStyle=s.z>.75?"#ffe9c4":"#cdd7ee";
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,7);ctx.fill();
+    if(!reduced){s.y+=s.z*.06*devicePixelRatio;if(s.y>H){s.y=-4;s.x=Math.random()*W}}
+  }
+  if(!reduced){
+    if(Math.random()<.004&&shoots.length<2)spawnShoot();
+    for(const sh of shoots){
+      ctx.globalAlpha=sh.life;ctx.strokeStyle="#ffe9c4";ctx.lineWidth=1.4*devicePixelRatio;
+      ctx.beginPath();ctx.moveTo(sh.x,sh.y);ctx.lineTo(sh.x-sh.vx*8,sh.y-sh.vy*8);ctx.stroke();
+      sh.x+=sh.vx;sh.y+=sh.vy;sh.life-=.02;
+    }
+    shoots=shoots.filter(s=>s.life>0);
+  }
+  ctx.globalAlpha=1;requestAnimationFrame(frame);
+}
+frame();
+addEventListener("scroll",()=>{if(reduced)return;cv.style.transform="translateY("+(scrollY*-.08)+"px)"},{passive:true});
+
+/* ============================== reveals / counters / nav ============================== */
+let revealIo=null;
+function observeReveals(){
+  if(revealIo)revealIo.disconnect();
+  revealIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");revealIo.unobserve(e.target)}}),{threshold:.1,rootMargin:"0px 0px -5% 0px"});
+  document.querySelectorAll(".reveal:not(.in)").forEach(el=>revealIo.observe(el));
+}
+const nav=document.getElementById("nav");
+addEventListener("scroll",()=>nav.classList.toggle("scrolled",scrollY>30),{passive:true});
+const flare=document.getElementById("flare");
+addEventListener("pointermove",e=>{flare.style.left=e.clientX+"px";flare.style.top=e.clientY+"px"},{passive:true});
+document.addEventListener("pointermove",e=>{
+  const card=e.target.closest&&e.target.closest(".engine");
+  if(card){const r=card.getBoundingClientRect();card.style.setProperty("--mx",(e.clientX-r.left)+"px");card.style.setProperty("--my",(e.clientY-r.top)+"px")}
+},{passive:true});
+const cio=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,end=+el.dataset.count,t0=performance.now(),dur=1500;
+  (function tick(now){const p=Math.min(1,(now-t0)/dur),v=Math.round(end*(1-Math.pow(1-p,3)));
+    el.textContent=v;if(p<1)requestAnimationFrame(tick)})(t0);
+}),{threshold:.5});
+document.querySelectorAll("[data-count]").forEach(el=>cio.observe(el));
+
+/* trust roll */
+const TRUST_KEYS=["trust.h1","trust.h2","trust.h3","trust.h4","trust.h5","trust.h6"];
+let rollIdx=0,rollTimer=null;
+function renderTrustRoll(){
+  const box=document.getElementById("trustRoll");
+  box.innerHTML=TRUST_KEYS.map((k,i)=>'<p class="'+(i===rollIdx?"on":i<rollIdx?"up":"down")+'" data-rk="'+k+'"></p>').join("");
+  box.querySelectorAll("p").forEach(p=>p.textContent=t(p.dataset.rk));
+}
+rollTimer=setInterval(()=>{rollIdx=(rollIdx+1)%TRUST_KEYS.length;renderTrustRoll()},2800);
+const rollIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){renderTrustRoll();rollIo.disconnect()}}),{threshold:.3});
+rollIo.observe(document.getElementById("trustRoll"));
+
+/* nav / mobile menu */
+const burger=document.getElementById("burger"),mobileMenu=document.getElementById("mobileMenu");
+burger.onclick=()=>{
+  const open=mobileMenu.classList.toggle("open");
+  burger.textContent=open?"✕":"☰";
+  burger.setAttribute("aria-expanded",open);
+  document.body.style.overflow=open?"hidden":"";
+};
+mobileMenu.querySelectorAll("a").forEach(a=>a.onclick=()=>{mobileMenu.classList.remove("open");burger.textContent="☰";document.body.style.overflow=""});
+
+/* faq hash deep links */
+function applyHash(){
+  const id=location.hash.replace("#","");
+  const grp=FAQ_GROUPS.find(g=>g.id===id);
+  if(!grp)return;
+  faqOpen[grp.id+"-0"]=true;
+  const det=document.getElementById(grp.id+"-0");
+  if(det){det.open=true;det.scrollIntoView({behavior:reduced?"auto":"smooth",block:"center"})}
+}
+addEventListener("hashchange",applyHash);
+
+/* CTA analytics */
+document.addEventListener("click",e=>{
+  const a=e.target.closest&&e.target.closest("[data-cta]");
+  if(!a||typeof gtag!=="function")return;
+  gtag("event","cta_click",{cta_placement:a.dataset.placement||"site",cta_destination:a.dataset.cta,cta_label:(a.textContent||"").trim().slice(0,60)});
+});
+
+/* ============================== boot ============================== */
+document.getElementById("year").textContent=new Date().getFullYear();
+buildLangMenus();
+(async function init(){
+  let initial="en";
+  try{
+    const stored=localStorage.getItem("saturn-lang");
+    if(stored&&LANGS.some(l=>l[0]===stored))initial=stored;
+    else{const nav2=(navigator.language||"en").slice(0,2);if(LANGS.some(l=>l[0]===nav2))initial=nav2}
+  }catch(e){}
+  await I18N.load(initial);I18N.lang=initial;
+  applyI18n();
+  applyHash();
+})();
+</script>
+</body>
+</html>
