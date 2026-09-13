@@ -101,6 +101,12 @@ button{font-family:inherit;cursor:pointer}
     radial-gradient(50rem 36rem at -15% 30%, rgba(93,143,255,.08), transparent 60%),
     radial-gradient(46rem 32rem at 60% 110%, rgba(244,185,66,.05), transparent 60%);
 }
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;display:block}
+.aurora i:nth-child(1){width:44vw;height:44vw;background:rgba(244,185,66,.13);top:-12%;right:-8%;animation:aurora-a 26s ease-in-out infinite}
+.aurora i:nth-child(2){width:38vw;height:38vw;background:rgba(93,143,255,.10);bottom:-14%;left:-10%;animation:aurora-b 34s ease-in-out infinite}
+@keyframes aurora-a{50%{transform:translate(-6vw,5vh) scale(1.15)}}
+@keyframes aurora-b{50%{transform:translate(5vw,-5vh) scale(1.1)}}
 .grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
   background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
   background-size:72px 72px;
@@ -111,10 +117,13 @@ main{position:relative;z-index:1}
 
 /* ---------- nav ---------- */
 nav.topnav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .35s,border-color .35s,backdrop-filter .35s;border-bottom:1px solid transparent}
-nav.topnav.scrolled{background:rgba(5,6,9,.78);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+nav.topnav.scrolled{background:rgba(8,10,18,.55);backdrop-filter:blur(26px) saturate(1.8);-webkit-backdrop-filter:blur(26px) saturate(1.8);border-bottom-color:rgba(255,255,255,.1)}
 .nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;gap:14px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.2em;text-transform:uppercase}
-.brand .planet-mark{height:30px;width:auto;display:block;flex:none;-webkit-user-drag:none;user-select:none;filter:drop-shadow(0 0 12px rgba(244,185,66,.35))}
+.brand .planet-badge{width:30px;height:30px;border-radius:50%;overflow:hidden;flex:none;position:relative;background:#000;
+  border:1px solid rgba(255,215,130,.5);
+  box-shadow:0 0 16px rgba(244,185,66,.45),inset 0 0 10px rgba(255,255,255,.10),inset 0 1px 0 rgba(255,255,255,.3)}
+.brand .planet-badge img{width:240%;height:auto;display:block;-webkit-user-drag:none;user-select:none;transform:translate(-29%,-25%)}
 .navlinks{display:flex;gap:2px;font-size:13.5px;color:var(--muted)}
 .navlinks>a,.navlinks .dd>button{display:flex;align-items:center;gap:5px;padding:9px 12px;border-radius:9px;color:var(--muted);background:none;border:none;font-size:13.5px;transition:color .2s,background .2s}
 .navlinks>a:hover,.navlinks .dd>button:hover{color:var(--text);background:rgba(255,255,255,.05)}
@@ -145,16 +154,20 @@ nav.topnav.scrolled{background:rgba(5,6,9,.78);backdrop-filter:blur(16px);border
 @media(max-width:520px){.lang.mobile-compact span.lbl{display:none}.lang.mobile-compact>button{padding:0;width:38px;justify-content:center}}
 
 /* ---------- buttons ---------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;transition:transform .25s,box-shadow .25s,background .25s,border-color .25s,color .25s;white-space:nowrap;border:none}
-.btn-gold{background:linear-gradient(to bottom,#ffd97a,#eaa023);color:#1a1205;padding:12px 24px;box-shadow:0 8px 26px rgba(234,160,35,.38)}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(234,160,35,.55)}
-.btn-ghost{border:1px solid var(--line2);color:var(--text);padding:12px 24px;background:rgba(255,255,255,.04)}
-.btn-ghost:hover{border-color:rgba(244,185,66,.55);color:var(--gold);transform:translateY(-2px)}
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;font-weight:700;font-size:14px;cursor:pointer;transition:transform .25s,box-shadow .25s,background .25s,border-color .25s,color .25s;white-space:nowrap;border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(16px) saturate(1.5);-webkit-backdrop-filter:blur(16px) saturate(1.5);
+  box-shadow:0 10px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,0,0,.18)}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.28) 50%,transparent 58%);transform:translateX(-130%);transition:transform .9s ease;pointer-events:none}
+.btn:hover::after{transform:translateX(130%)}
+.btn-gold{background:linear-gradient(to bottom,#ffdf8a,#eda21f);border-color:rgba(255,255,255,.4);color:#231502;padding:12px 24px;box-shadow:0 8px 30px rgba(234,160,35,.45),0 2px 8px rgba(234,160,35,.3),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(120,60,0,.35)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(234,160,35,.6),0 0 24px rgba(244,185,66,.35),inset 0 1px 0 rgba(255,255,255,.55)}
+.btn-ghost{color:var(--text);padding:12px 24px;background:rgba(255,255,255,.07)}
+.btn-ghost:hover{border-color:rgba(244,185,66,.55);color:var(--gold);transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.5),0 0 20px rgba(244,185,66,.18),inset 0 1px 0 rgba(255,255,255,.3)}
 .btn-sm{padding:9px 18px;font-size:13px}
 
 /* ---------- hero ---------- */
 .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;padding:130px 24px 70px}
-.eyebrow{display:inline-flex;align-items:center;gap:10px;max-width:92vw;border:1px solid rgba(244,185,66,.35);background:rgba(244,185,66,.08);color:var(--gold);font-size:11.5px;font-weight:600;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;border-radius:999px;margin-bottom:28px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;max-width:92vw;border:1px solid rgba(244,185,66,.4);background:rgba(244,185,66,.12);color:var(--gold);font-size:11.5px;font-weight:600;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;border-radius:999px;margin-bottom:28px}
 .eyebrow span.txt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .eyebrow .pulse{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none;box-shadow:0 0 0 0 rgba(244,185,66,.7);animation:pulse 2.2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(244,185,66,.6)}70%{box-shadow:0 0 0 12px rgba(244,185,66,0)}100%{box-shadow:0 0 0 0 rgba(244,185,66,0)}}
@@ -223,6 +236,17 @@ h2.title{font-size:clamp(30px,4.4vw,52px);line-height:1.08;font-weight:700;lette
 .d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}.d4{transition-delay:.28s}.d5{transition-delay:.35s}.d6{transition-delay:.42s}
 
 .panel{border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 30px 80px -40px rgba(0,0,0,.9)}
+/* iOS 26 liquid-glass card material */
+.engine,.bot,.ccard,.sec,.tier,.faq-group,.step,.hstat,.tmet,.dcell,.pcard,.trust-panel,.expanding,.slide-in,.mrow,.wrow{
+  background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.025));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(0,0,0,.25),0 26px 60px -32px rgba(0,0,0,.85);
+}
+.lang>button,.burger,.arrows button,.chip,.ph-input .fake,.eyebrow{
+  background:rgba(255,255,255,.07);
+  backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 24px rgba(0,0,0,.35);
+}
 
 /* ---------- trust strip ---------- */
 .trust{padding-top:34px}
@@ -482,12 +506,13 @@ footer li a:hover{color:var(--gold)}
 <a class="skip" href="#features">Skip to content</a>
 <canvas id="stars"></canvas>
 <div id="nebula"></div>
+<div class="aurora" aria-hidden="true"><i></i><i></i></div>
 <div class="grid-overlay"></div>
 <div class="flare" id="flare" aria-hidden="true"></div>
 
 <nav class="topnav" id="nav" aria-label="Primary">
   <div class="nav-inner">
-    <a class="brand" href="#top"><img class="planet-mark" src="public/images/saturn-planet.png" alt="Saturn Bots logo" width="512" height="512" draggable="false">SATURN</a>
+    <a class="brand" href="#top"><span class="planet-badge" aria-hidden="true"><img src="public/images/saturn-planet.png" alt="" width="512" height="512" draggable="false"></span>SATURN</a>
 
     <div class="navlinks" id="navLinks">
       <a href="#features" data-i18n="nav.features"></a>
@@ -798,7 +823,7 @@ footer li a:hover{color:var(--gold)}
 <footer>
   <div class="f-inner">
     <div>
-      <a class="brand" href="#top"><img class="planet-mark" src="public/images/saturn-planet.png" alt="Saturn Bots logo" width="512" height="512" draggable="false">SATURN</a>
+      <a class="brand" href="#top"><span class="planet-badge" aria-hidden="true"><img src="public/images/saturn-planet.png" alt="" width="512" height="512" draggable="false"></span>SATURN</a>
       <p class="f-tag" data-i18n="footer.tagline"></p>
       <div class="f-ctas">
         <a class="btn btn-gold btn-sm" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="footer"><span data-i18n="footer.ctaTelegram"></span></a>
