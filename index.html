@@ -114,8 +114,7 @@ nav.topnav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background 
 nav.topnav.scrolled{background:rgba(5,6,9,.78);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
 .nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 24px;gap:14px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.2em;text-transform:uppercase}
-.brand .dot{width:24px;height:24px;border-radius:50%;background:var(--grad-gold);position:relative;box-shadow:0 0 16px rgba(244,185,66,.55);flex:none}
-.brand .dot::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:5px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85);transform:translateY(-50%) rotate(-18deg)}
+.brand .planet-mark{height:30px;width:auto;display:block;flex:none;-webkit-user-drag:none;user-select:none;filter:drop-shadow(0 0 12px rgba(244,185,66,.35))}
 .navlinks{display:flex;gap:2px;font-size:13.5px;color:var(--muted)}
 .navlinks>a,.navlinks .dd>button{display:flex;align-items:center;gap:5px;padding:9px 12px;border-radius:9px;color:var(--muted);background:none;border:none;font-size:13.5px;transition:color .2s,background .2s}
 .navlinks>a:hover,.navlinks .dd>button:hover{color:var(--text);background:rgba(255,255,255,.05)}
@@ -488,7 +487,7 @@ footer li a:hover{color:var(--gold)}
 
 <nav class="topnav" id="nav" aria-label="Primary">
   <div class="nav-inner">
-    <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span>SATURN</a>
+    <a class="brand" href="#top"><img class="planet-mark" src="public/images/saturn-planet.png" alt="Saturn Bots logo" width="512" height="512" draggable="false">SATURN</a>
 
     <div class="navlinks" id="navLinks">
       <a href="#features" data-i18n="nav.features"></a>
@@ -799,7 +798,7 @@ footer li a:hover{color:var(--gold)}
 <footer>
   <div class="f-inner">
     <div>
-      <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span>SATURN</a>
+      <a class="brand" href="#top"><img class="planet-mark" src="public/images/saturn-planet.png" alt="Saturn Bots logo" width="512" height="512" draggable="false">SATURN</a>
       <p class="f-tag" data-i18n="footer.tagline"></p>
       <div class="f-ctas">
         <a class="btn btn-gold btn-sm" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="footer"><span data-i18n="footer.ctaTelegram"></span></a>
