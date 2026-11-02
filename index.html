@@ -571,33 +571,41 @@ footer li a:hover{color:var(--gold)}
 <main id="top">
 
 <!-- ============ HERO ============ -->
-<header class="hero">
-  <div class="saturn-stage" aria-hidden="true">
-    <div class="saturn-spin">
-      <div class="saturn-tilt">
-        <div class="saturn-body"></div>
-        <div class="ring ring-b"></div>
-        <div class="ring ring-a"></div>
-        <div class="ring ring-c"></div>
+<header class="hero cosmic-hero">
+  <div class="cosmic-hero-inner">
+    <div class="cosmic-planet-side" aria-hidden="true">
+      <div class="cosmic-orbit-hud"><span class="hud-tick tick-a"></span><span class="hud-tick tick-b"></span><span class="hud-tick tick-c"></span></div>
+      <div class="cosmic-planet"><img src="public/images/saturn-planet.png" alt="" width="640" height="640" decoding="async" fetchpriority="high"></div>
+      <div class="cosmic-orbit-label">SATURN // MULTI-CHAIN NETWORK</div>
+    </div>
+    <div class="cosmic-hero-copy">
+      <div class="eyebrow reveal in"><span class="pulse"></span><span class="txt" data-i18n="hero.badge"></span></div>
+      <div class="cosmic-wordmark" aria-label="Saturn Bots"><span>SATURN</span><strong>BOTS</strong></div>
+      <p class="cosmic-descriptor">MULTI-CHAIN TELEGRAM TRADING BOT &amp; WEB DASHBOARD</p>
+      <h1 class="mega reveal in d1"><span data-i18n="hero.title1"></span><span class="grad" data-i18n="hero.title2"></span></h1>
+      <p class="hero-sub reveal in d2" data-i18n="hero.description"></p>
+      <div class="hero-ctas reveal in d3">
+        <a class="btn btn-gold" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="hero"><span aria-hidden="true">➤</span> <span data-i18n="hero.ctaTelegram"></span></a>
+        <a class="btn btn-ghost" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="hero"><span aria-hidden="true">▣</span> <span data-i18n="hero.ctaDashboard"></span> ↗</a>
+      </div>
+      <p class="hero-sub2 reveal in d4" data-i18n="hero.subtext"></p>
+      <div class="cosmic-hero-benefits" aria-label="Trading capabilities">
+        <a href="#features"><span>⚡</span><b>Auto Snipe</b></a>
+        <a href="#features"><span>▣</span><b>Copy Trading</b></a>
+        <a href="#features"><span>◎</span><b>Limit Orders</b></a>
+        <a href="#features"><span>◉</span><b>DCA</b></a>
+        <a href="#security"><span>⬡</span><b>MEV Protection</b></a>
       </div>
     </div>
   </div>
-
-  <div class="eyebrow reveal in"><span class="pulse"></span><span class="txt" data-i18n="hero.badge"></span></div>
-  <h1 class="mega reveal in d1"><span data-i18n="hero.title1"></span><span class="grad" data-i18n="hero.title2"></span></h1>
-  <p class="hero-sub reveal in d2" data-i18n="hero.description"></p>
-  <div class="hero-ctas reveal in d3">
-    <a class="btn btn-gold" style="min-height:48px" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="hero"><span data-i18n="hero.ctaTelegram"></span></a>
-    <a class="btn btn-ghost" style="min-height:48px" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="hero"><span data-i18n="hero.ctaDashboard"></span> ↗</a>
-  </div>
-  <p class="hero-sub2 reveal in d4" data-i18n="hero.subtext"></p>
+  <div class="cosmic-horizon" aria-hidden="true"></div>
   <div class="hero-stats reveal in d5">
     <div class="hstat"><b>10</b><span data-i18n="hero.stat.wallets"></span></div>
     <div class="hstat"><b>5</b><span data-i18n="hero.stat.referralTiers"></span></div>
     <div class="hstat"><b>2.0%</b><span data-i18n="hero.stat.maxRate"></span></div>
     <div class="hstat"><b>24/7</b><span data-i18n="hero.stat.snipers"></span></div>
   </div>
-  <div class="scroll-hint" aria-hidden="true"><span>Scroll</span><span class="line"></span></div>
+  <a class="cosmic-scroll" href="#features" aria-label="Explore features">↓</a>
 </header>
 
 <!-- chain ticker -->
