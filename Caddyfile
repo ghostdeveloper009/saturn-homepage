@@ -1,18 +1,19 @@
 {
-	admin off
+    admin off
+    auto_https off
 }
 
-{$PORT:8080}
+http://0.0.0.0:{$PORT:8080} {
+    encode zstd gzip
 
-encode zstd gzip
+    root * /app
 
-root * /app
+    @immutable path /public/images/* /public/locales/* /public/cosmic-refresh.css
+    header @immutable Cache-Control "public, max-age=15552000"
 
-@immutable path /public/images/* /public/locales/*
-header @immutable Cache-Control "public, max-age=15552000"
+    header / Cache-Control "public, max-age=300"
 
-header / Cache-Control "public, max-age=300"
-
-file_server {
-	hide Caddyfile railpack.json Staticfile .git
+    file_server {
+        hide Caddyfile railpack.json Staticfile .git
+    }
 }
