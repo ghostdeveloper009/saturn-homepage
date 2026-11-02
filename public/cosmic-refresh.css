@@ -1,0 +1,31 @@
+/* SaturnBots cosmic design refresh — layered over existing styles */
+:root{--bg:#030713;--bg2:#071025;--panel:rgba(7,17,38,.75);--panel2:rgba(9,23,48,.82);--line:rgba(75,169,255,.19);--line2:rgba(255,194,65,.3);--gold:#ffcc39;--gold2:#ff9e0c;--ice:#48baff;--muted:#b1c0d8;--grad-gold:linear-gradient(105deg,#fff2bc 0%,#ffcc39 42%,#ff9811 100%)}
+body{background:radial-gradient(ellipse 90% 32% at 50% 0%,#10255b 0%,transparent 70%),#030713}
+#nebula{background:radial-gradient(ellipse 45rem 32rem at 94% 13%,rgba(16,108,255,.24),transparent 76%),radial-gradient(ellipse 38rem 30rem at 3% 23%,rgba(84,27,174,.20),transparent 80%),radial-gradient(ellipse 58rem 32rem at 50% 70%,rgba(255,140,0,.07),transparent 80%)}
+nav.topnav{border-bottom:1px solid rgba(93,168,255,.12);background:rgba(3,8,22,.78);backdrop-filter:blur(22px)}
+nav.topnav.scrolled{background:rgba(3,8,22,.94);border-bottom-color:rgba(255,191,58,.25)}
+.nav-inner{max-width:1440px;height:74px}
+.brand{font-weight:800;letter-spacing:.12em;color:#fff;text-shadow:0 0 22px rgba(255,195,48,.25)}
+.navlinks>a:hover,.navlinks .dd>button:hover{color:#ffcf53}
+.btn-gold{background:linear-gradient(115deg,#fff17a,#ffc600 55%,#ff9f0c)!important;color:#091122!important;border-color:#ffe571!important;box-shadow:0 4px 26px rgba(255,171,13,.25)}
+.btn-gold:hover{box-shadow:0 6px 40px rgba(255,171,13,.48);transform:translateY(-2px)}
+.btn-ghost{border-color:rgba(57,173,255,.7)!important;background:rgba(6,16,35,.67)!important;box-shadow:inset 0 0 16px rgba(30,125,255,.11),0 0 19px rgba(30,125,255,.12)}
+.btn-ghost:hover{border-color:#6ecbff!important;box-shadow:0 0 25px rgba(30,125,255,.3)}
+.hero{isolation:isolate;overflow:hidden;padding-top:130px;min-height:760px}
+.hero:before{content:"";position:absolute;z-index:-2;inset:0;background:radial-gradient(ellipse 44% 45% at 18% 39%,rgba(255,165,10,.13),transparent 75%),radial-gradient(ellipse 57% 42% at 88% 25%,rgba(15,91,231,.24),transparent 76%);pointer-events:none}
+.hero:after{content:"";position:absolute;z-index:-1;left:-15%;right:-15%;bottom:-18rem;height:24rem;border-top:3px solid rgba(67,176,255,.75);border-radius:50% 50% 0 0;box-shadow:0 -12px 30px rgba(30,144,255,.27),0 -5px 85px rgba(255,150,31,.18);transform:rotate(-2deg);pointer-events:none}
+.hero .mega{filter:drop-shadow(0 6px 24px rgba(0,0,0,.45));text-shadow:0 2px 28px rgba(35,123,255,.18)}
+.hero .mega .grad{filter:drop-shadow(0 0 18px rgba(255,171,26,.24))}
+.hero .eyebrow{border:1px solid rgba(255,197,65,.43);background:rgba(8,14,31,.75);box-shadow:0 0 23px rgba(255,168,28,.10)}
+.hero-ctas{gap:16px}
+.hero-ctas .btn{min-height:54px!important;padding-inline:25px}
+.saturn-stage{filter:drop-shadow(0 0 34px rgba(255,154,0,.18))}
+.hstat,.tmet{border-color:rgba(255,189,65,.2)}
+.panel,.feature-card,.bot-card,.chain-card,.eco-card,.step,.faq-item{background:linear-gradient(145deg,rgba(13,26,53,.85),rgba(4,10,24,.92));border-color:rgba(86,155,255,.19);box-shadow:inset 0 1px rgba(255,255,255,.035),0 18px 50px rgba(0,0,0,.16)}
+.panel:hover,.feature-card:hover,.bot-card:hover,.chain-card:hover,.eco-card:hover{border-color:rgba(255,188,49,.47)}
+section{scroll-margin-top:85px}
+section .kicker{color:#ffcb45}
+.title .grad{filter:drop-shadow(0 0 14px rgba(255,181,30,.14))}
+:focus-visible{outline:2px solid #63c6ff;outline-offset:4px}
+@media(max-width:768px){.nav-inner{height:65px}.hero{min-height:690px;padding-top:112px}.hero:after{bottom:-19rem}.hero-ctas{gap:11px}.hero-ctas .btn{width:100%;max-width:330px}.saturn-stage{opacity:.6}section{scroll-margin-top:70px}}
+@media(prefers-reduced-motion:reduce){.hero:after,.btn-gold,.btn-ghost{transition:none!important}}
