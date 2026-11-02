@@ -65,3 +65,10 @@ section .kicker{color:#ffcb45}
 @media(max-width:760px){.cosmic-hero{padding:90px 16px 50px}.cosmic-hero-inner{display:flex;flex-direction:column;gap:0}.cosmic-planet-side{min-height:0;width:min(100%,390px);height:290px;margin:0 auto -4px}.cosmic-planet{width:340px;max-width:100%}.cosmic-orbit-hud{width:310px;max-width:100%}.cosmic-orbit-label{bottom:-1%;font-size:8px}.cosmic-hero-copy{padding:18px 0 0;width:100%;text-align:center}.cosmic-wordmark{justify-content:center;font-size:clamp(42px,10vw,76px)}.cosmic-descriptor{margin:14px 0 22px;padding:9px 10px;letter-spacing:.06em;font-size:10px}.cosmic-hero h1.mega{font-size:clamp(35px,8vw,56px)}.cosmic-hero .hero-sub{margin:16px auto 0}.cosmic-hero .hero-ctas{justify-content:center}.cosmic-hero-benefits{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.cosmic-hero-benefits a{min-height:85px}.cosmic-hero .hero-stats{margin-top:35px}.cosmic-horizon{bottom:-245px}}
 @media(max-width:420px){.cosmic-planet-side{height:235px}.cosmic-planet{width:270px}.cosmic-orbit-hud{width:250px}.cosmic-wordmark{font-size:clamp(34px,9vw,46px)}.cosmic-hero-benefits a b{font-size:10px}.cosmic-hero .hero-ctas .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.cosmic-orbit-hud{animation:none}.cosmic-hero-benefits a{transition:none}}
+
+/* Reliability: keep content visible even if animation observers or scripts fail. */
+.reveal:not(.in){opacity:1!important;transform:none!important}
+body,main,.cosmic-hero,.cosmic-hero-inner,.cosmic-hero-copy{visibility:visible!important}
+.engine,.bot,.ccard,.sec,.tier,.faq-group,.step,.hstat,.tmet,.dcell,.pcard,.trust-panel,.expanding{background:linear-gradient(145deg,rgba(10,25,54,.94),rgba(4,11,28,.96));border-color:rgba(75,169,255,.26);box-shadow:inset 0 1px rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.22)}
+.engine:hover,.bot:hover,.ccard:hover,.sec:hover,.tier:hover,.faq-group:hover{border-color:rgba(255,192,51,.7);box-shadow:0 0 24px rgba(255,169,18,.14)}
+@media(max-width:760px){.cosmic-hero-inner,.cosmic-hero-copy{max-width:100%}.cosmic-wordmark{white-space:normal}.cosmic-hero-benefits a{overflow-wrap:anywhere}}
