@@ -56,6 +56,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
+<!-- Cosmic SaturnBots visual refresh: preserve original page interactions and i18n -->
+
+
 <!-- Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYLL8F3497"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-DYLL8F3497');</script>
@@ -497,6 +500,7 @@ footer li a:hover{color:var(--gold)}
 }
 @media(max-height:700px){.scroll-hint{display:none}}
 </style>
+<link rel="stylesheet" href="/public/cosmic-refresh.css?v=4">
 </head>
 <body>
 
@@ -568,33 +572,48 @@ footer li a:hover{color:var(--gold)}
 <main id="top">
 
 <!-- ============ HERO ============ -->
-<header class="hero">
-  <div class="saturn-stage" aria-hidden="true">
-    <div class="saturn-spin">
-      <div class="saturn-tilt">
-        <div class="saturn-body"></div>
-        <div class="ring ring-b"></div>
-        <div class="ring ring-a"></div>
-        <div class="ring ring-c"></div>
-      </div>
+<header class="hero cosmic-hero v3-hero" id="top">
+  <div class="v3-nebula v3-nebula-left" aria-hidden="true"></div><div class="v3-nebula v3-nebula-right" aria-hidden="true"></div>
+  <div class="v3-hero-grid">
+    <div class="v3-planet-stage" aria-hidden="true">
+      <div class="v3-hud v3-hud-one"></div><div class="v3-hud v3-hud-two"></div>
+      <svg class="v3-saturn" viewBox="0 0 660 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <radialGradient id="v3globe" cx="28%" cy="20%" r="86%"><stop offset="0" stop-color="#fff5c4"/><stop offset=".15" stop-color="#ffd08a"/><stop offset=".38" stop-color="#e68b39"/><stop offset=".64" stop-color="#8e422b"/><stop offset=".88" stop-color="#25172b"/><stop offset="1" stop-color="#0a0e22"/></radialGradient>
+          <linearGradient id="v3ring" x1="0" x2="1" y1="0" y2=".7"><stop stop-color="#fff4b1"/><stop offset=".22" stop-color="#ff9d19"/><stop offset=".5" stop-color="#fff0a1"/><stop offset=".75" stop-color="#ff7c11"/><stop offset="1" stop-color="#ffe49a"/></linearGradient>
+          <linearGradient id="v3stripe" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="#fff6bf" stop-opacity=".35"/><stop offset=".5" stop-color="#a9422b" stop-opacity=".05"/><stop offset="1" stop-color="#120e27" stop-opacity=".55"/></linearGradient>
+          <filter id="v3glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <clipPath id="v3planetclip"><circle cx="328" cy="268" r="166"/></clipPath>
+        </defs>
+        <g class="v3-ring-back" transform="rotate(-20 330 270)" fill="none"><ellipse cx="330" cy="270" rx="308" ry="98" stroke="#ff9d27" stroke-width="30" opacity=".2" filter="url(#v3glow)"/><ellipse cx="330" cy="270" rx="306" ry="95" stroke="url(#v3ring)" stroke-width="20"/><ellipse cx="330" cy="270" rx="284" ry="84" stroke="#fff1ad" stroke-width="4"/><ellipse cx="330" cy="270" rx="263" ry="73" stroke="#f88a1d" stroke-width="6"/></g>
+        <circle cx="328" cy="268" r="166" fill="url(#v3globe)" stroke="#ffce73" stroke-width="1.5"/>
+        <g clip-path="url(#v3planetclip)" opacity=".56" transform="rotate(-19 328 268)"><path d="M130 180 Q300 130 535 164 M130 204 Q300 158 535 195 M130 242 Q300 200 535 233 M130 288 Q300 246 535 276 M130 328 Q300 288 535 319 M130 366 Q300 336 535 357" stroke="url(#v3stripe)" stroke-width="23" fill="none"/><path d="M130 191 Q300 151 535 181 M130 265 Q300 221 535 253 M130 345 Q300 302 535 337" stroke="#ffe6a2" stroke-opacity=".3" stroke-width="8" fill="none"/></g>
+        <g class="v3-ring-front" transform="rotate(-20 330 270)" fill="none"><ellipse cx="330" cy="270" rx="306" ry="95" stroke="#ffb128" stroke-width="27" opacity=".38" filter="url(#v3glow)" stroke-dasharray="960 960" stroke-dashoffset="-10"/><ellipse cx="330" cy="270" rx="306" ry="95" stroke="url(#v3ring)" stroke-width="20" stroke-dasharray="960 960" stroke-dashoffset="-10"/><ellipse cx="330" cy="270" rx="284" ry="84" stroke="#fff0ac" stroke-width="4" stroke-dasharray="900 900" stroke-dashoffset="-10"/></g>
+        <g class="v3-sparkles" fill="#fff2b6"><circle cx="68" cy="295" r="3"/><circle cx="560" cy="126" r="3"/><circle cx="535" cy="389" r="2"/></g>
+      </svg>
+      <div class="v3-planet-caption">ORBITAL TRADING NETWORK <span>●</span> ONLINE</div>
+    </div>
+    <div class="v3-copy">
+      <div class="v3-overline"><span class="v3-live-dot"></span><span data-i18n="hero.badge">Multi-chain trading ecosystem</span></div>
+      <div class="v3-wordmark"><span>SATURN</span><strong>BOTS</strong></div>
+      <div class="v3-descriptor">MULTI-CHAIN TELEGRAM TRADING BOT &amp; WEB DASHBOARD</div>
+      <h1 class="v3-headline"><span>Trade at <em>orbit speed.</em></span></h1>
+      <p class="v3-tagline">Snipe. Copy. Protect.</p>
+      <p class="v3-description" data-i18n="hero.description"></p>
+      <div class="v3-actions"><a class="btn btn-gold" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="hero">➤ <span data-i18n="hero.ctaTelegram">Launch on Telegram</span></a><a class="btn btn-ghost" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="hero">▣ <span data-i18n="hero.ctaDashboard">Open Web Dashboard</span></a></div>
+      <p class="v3-subtext" data-i18n="hero.subtext"></p>
     </div>
   </div>
-
-  <div class="eyebrow reveal in"><span class="pulse"></span><span class="txt" data-i18n="hero.badge"></span></div>
-  <h1 class="mega reveal in d1"><span data-i18n="hero.title1"></span><span class="grad" data-i18n="hero.title2"></span></h1>
-  <p class="hero-sub reveal in d2" data-i18n="hero.description"></p>
-  <div class="hero-ctas reveal in d3">
-    <a class="btn btn-gold" style="min-height:48px" href="https://t.me/Saturnsolbot" target="_blank" rel="noopener" data-cta="telegram" data-placement="hero"><span data-i18n="hero.ctaTelegram"></span></a>
-    <a class="btn btn-ghost" style="min-height:48px" href="https://app.saturnbots.org" target="_blank" rel="noopener" data-cta="dashboard" data-placement="hero"><span data-i18n="hero.ctaDashboard"></span> ↗</a>
+  <div class="v3-features" aria-label="Trading capabilities">
+    <a href="#features"><span class="v3-feature-icon">ϟ</span><b>Auto Snipe</b><small>Be first in. Fast &amp; simple.</small></a>
+    <a href="#features"><span class="v3-feature-icon">▣</span><b>Copy Trading</b><small>Mirror top wallets.</small></a>
+    <a href="#features"><span class="v3-feature-icon">⊙</span><b>Limit Orders</b><small>Set your entry &amp; exit.</small></a>
+    <a href="#features"><span class="v3-feature-icon">≋</span><b>DCA</b><small>Automate your buys.</small></a>
+    <a href="#features"><span class="v3-feature-icon">◈</span><b>Whale Alerts</b><small>Track major moves.</small></a>
+    <a href="#security"><span class="v3-feature-icon">⬡</span><b>MEV Protection</b><small>Trade safer on-chain.</small></a>
   </div>
-  <p class="hero-sub2 reveal in d4" data-i18n="hero.subtext"></p>
-  <div class="hero-stats reveal in d5">
-    <div class="hstat"><b>10</b><span data-i18n="hero.stat.wallets"></span></div>
-    <div class="hstat"><b>5</b><span data-i18n="hero.stat.referralTiers"></span></div>
-    <div class="hstat"><b>2.0%</b><span data-i18n="hero.stat.maxRate"></span></div>
-    <div class="hstat"><b>24/7</b><span data-i18n="hero.stat.snipers"></span></div>
-  </div>
-  <div class="scroll-hint" aria-hidden="true"><span>Scroll</span><span class="line"></span></div>
+  <div class="v3-chains"><div class="v3-chains-title">ECOSYSTEM CHAINS</div><div class="v3-chain-row"><a href="#chains"><i>◎</i> Solana</a><a href="#chains"><i>◆</i> Ethereum</a><a href="#chains"><i>●</i> Base</a><a href="#chains"><i>⬡</i> Arbitrum</a><a href="#chains"><i>◇</i> BSC</a></div></div>
+  <div class="v3-earth" aria-hidden="true"></div>
 </header>
 
 <!-- chain ticker -->
